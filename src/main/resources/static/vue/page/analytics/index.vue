@@ -1,12 +1,12 @@
 <template>
-  <div class="system-settings">
+  <div class="sales-analytics">
     <header>
       <h1>
         <div v-if="titleText == ''">
-          設定
+          販売分析
         </div>
         <div v-else>
-          {{this.titleText}} <small> / 設定</small>
+          {{this.titleText}} <small> / 販売分析</small>
         </div>
       </h1>
     </header>

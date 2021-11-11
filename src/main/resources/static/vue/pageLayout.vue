@@ -50,6 +50,13 @@ const router = new VueRouter({
         { path: "", component: httpVueLoader("/vue/page/settings/general.vue") },
       ],
     },
+    {
+      path: "/analytics",
+      component: httpVueLoader("/vue/page/analytics/index.vue"),
+      children: [
+        { path: "", component: httpVueLoader("/vue/page/analytics/general.vue") },
+      ],
+    },
     { path: "*", component: httpVueLoader("/vue/notfound.vue") },
   ],
 });
