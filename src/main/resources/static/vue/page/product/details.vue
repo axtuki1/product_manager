@@ -4,13 +4,13 @@
       <i class="fas fa-circle-notch anim"></i>
       <loading-text style="font-weight: bold"></loading-text>
     </div>
-    <div class="error center-dialog " v-show="error">
+    <div class="error center-dialog " v-if="error">
       <i class="fas fa-exclamation-triangle"></i>
       <div style="font-weight: bold">
         指定された商品は見つかりませんでした。
       </div>
     </div>
-    <div class="item-details">
+    <div class="item-details" v-if="!error">
       <h1>{{ itemData.name }}</h1>
       <div class="infomation">
         <infomation-item

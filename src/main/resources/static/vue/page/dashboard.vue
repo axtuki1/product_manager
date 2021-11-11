@@ -23,7 +23,9 @@ module.exports = {
       this.$APPDATA.util_methods.fatal_error_handle("エラーが発生しました。","ま、テストなんですけどね。");
     },
     doModal_btn(){
-      this.$APPDATA.util_methods.callModal("こんてんと","たいとる");
+      this.$APPDATA.util_methods.callModal("こんてんと",{
+        title: "タイトル(強制ボタン入力)",
+      });
     }
   }
 }

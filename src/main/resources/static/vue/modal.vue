@@ -5,9 +5,13 @@
     v-on:click.stop.prevent.self="clickBackgound"
   >
     <div class="modal">
-      <div class="modal-header" v-if="this.modal.title != ''">{{ modal.title }}</div>
-      <div class="modal-content">{{ this.modal.content }}</div>
-      <button class="btn primary close-btn" v-on:click="closeModal">OK</button>
+      <div class="modal-header" v-if="this.modal.title != ''">
+        {{ this.modal.title }}
+      </div>
+      <div class="modal-content"></div>
+      <button class="btn primary close-btn" v-on:click="closeModal">
+        {{ this.modal.ok_btn.text }}
+      </button>
     </div>
   </div>
 </template>
@@ -23,9 +27,11 @@ module.exports = {
   },
   methods: {
     clickBackgound() {
-        if(!this.modal.force_ok) this.closeModal();
+      if (!this.modal.force_ok) this.closeModal();
     },
     closeModal() {
+      if (this.modal.ok_btn.func() === false) return;
+
       this.close = true;
       setTimeout(() => {
         this.$emit("close", this.modal.id);
@@ -34,9 +40,26 @@ module.exports = {
   },
   mounted() {
     this.close = false;
-    setTimeout(() => {
-      this.show = true;
-    }, 10);
+    // 苦
+    if (typeof this.modal.content == "function") {
+      this.modal.content().then((e) => {
+        const ins = new (Vue.extend(e))();
+        ins.$mount();
+        this.$el.querySelector(".modal-content").appendChild(ins.$el);
+        setTimeout(() => {
+          this.show = true;
+        }, 10);
+      });
+    } else {
+      if( typeof this.modal.content == "Node" ){
+        this.$el.querySelector(".modal-content").appendChild(this.modal.content);
+      } else {
+        this.$el.querySelector(".modal-content").innerHTML = this.modal.content;
+      }
+      setTimeout(() => {
+        this.show = true;
+      }, 10);
+    }
   },
 };
 </script>
@@ -58,7 +81,7 @@ module.exports = {
 }
 
 .modal-wrapper.show {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(1.25px);
   pointer-events: all;
 }
@@ -98,19 +121,20 @@ module.exports = {
 }
 
 .modal > * {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .title {
-    font-weight: bold;
+  font-weight: bold;
 }
 
-.title, .content {
+.title,
+.content {
   user-select: all;
 }
 
-.modal .close-btn{
-    width: 5em;
+.modal .close-btn {
+  width: 5em;
 }
 </style>

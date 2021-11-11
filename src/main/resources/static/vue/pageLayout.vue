@@ -13,7 +13,13 @@
     </div>
     <apiconsole></apiconsole>
     <div class="overlay-wrapper">
-      <modal v-for="modal in modals" :key="modal.id" :modal="modal" @close="closeModal"></modal>
+      <modal
+        v-for="modal in modals"
+        :key="modal.id"
+        :modal="modal"
+        @close="closeModal"
+        >
+      </modal>
     </div>
   </div>
 </template>
@@ -51,7 +57,7 @@ module.exports = {
         reason: "",
       },
       modals: [],
-      modalCount: 0
+      modalCount: 0,
     };
   },
   router: router,
@@ -63,9 +69,9 @@ module.exports = {
     modal: httpVueLoader("/vue/modal.vue"),
   },
   methods: {
-    closeModal(id){
-      this.modals = this.modals.filter(item => item.id != id);
-    }
+    closeModal(id) {
+      this.modals = this.modals.filter((item) => item.id != id);
+    },
   },
   mounted() {
     const v = this;
@@ -100,12 +106,23 @@ module.exports = {
           reason: reason,
         };
       },
-      callModal(content, title = "", force_ok = false){
+      callModal(content, options) {
+        const default_options = {
+          title: "",
+          force_ok: false,
+          ok_btn: {
+            text: "OK",
+            func: () => {},
+          },
+        };
+        options = Object.assign(default_options, options);
         v.modals.push({
           id: v.modalCount,
-          title: title,
+          title: options.title,
           content: content,
-          force_ok: force_ok
+          force_ok: options.force_ok,
+          ok_btn: options.ok_btn,
+          component: options.component,
         });
         v.modalCount++;
       },
@@ -165,10 +182,10 @@ module.exports = {
   overflow: hidden;
 }
 
-.overlay-wrapper{
+.overlay-wrapper {
   position: absolute;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -256,7 +273,7 @@ input {
 
 .btn {
   padding: 7.5px 12.5px;
-  background: rgb(197, 197, 197);
+  background: rgb(235, 235, 235);
   color: rgb(0, 0, 0);
   border-radius: 10px;
   border: 0px;
@@ -265,12 +282,12 @@ input {
 }
 
 .btn:hover {
-  background: rgb(211, 211, 211);
+  background: rgb(240, 240, 240);
   color: rgb(0, 0, 0);
 }
 
 .btn:active {
-  background: rgb(156, 156, 156);
+  background: rgb(182, 182, 182);
   color: rgb(0, 0, 0);
 }
 

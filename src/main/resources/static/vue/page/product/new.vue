@@ -14,9 +14,8 @@
     </div>
     <div class="inputField productGenre">
       <label for="productGenre">ジャンル</label>
-      <div class="genre-select-btn" v-on:click="openGenreSelector">
-        <div class="selected-name"></div>
-        <input type="hidden" v-model="productGenre"/>
+      <div class="genre-select-btn btn" v-on:click="openGenreSelector">
+        <div class="selected-name">{{ this.genreList[this.productGenre].name }}</div>
       </div>
     </div>
   </div>
@@ -30,20 +29,29 @@ module.exports = {
       productName: "",
       productPrice: 0,
       productAmount: 0,
-      productGenre: 0
+      productGenre: 0,
+      genreList: [
+        {
+          id: 0,
+          name: "未指定",
+          parentId: null
+        }
+      ]
     };
   },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
-    "product-item": httpVueLoader("/vue/component/product/product-item.vue"),
   },
   methods: {
-    openGenreSelector(){
-
-    }
+    openGenreSelector() {
+      this.$APPDATA.util_methods.callModal(
+        httpVueLoader("/vue/component/product/genre-selector.vue")
+      );
+    },
   },
   mounted() {
     this.$emit("update-title", "新規追加");
+    
   },
 };
 </script>
@@ -53,7 +61,7 @@ h1 {
   margin: 0;
 }
 
-.product-add{
+.product-add {
   padding: 10px 15px;
 }
 </style>
