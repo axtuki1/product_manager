@@ -1,6 +1,7 @@
-package com.example.demo.controller.api;
+package com.example.demo.controller.api.app;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,14 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.repository.ItemRepository;
+import com.example.demo.entity.Genre;
+import com.example.demo.repository.GenreRepository;
 
 @Controller
-public class GetItemListApiController {
-
+public class GetGenreListApiController {
+	
 	@Autowired
-	ItemRepository repository;
-
+	GenreRepository repository;
+	
 	/**
 	 * 商品一覧を返すAPI。
 	 * @Endpoint /api/v1/items 
@@ -32,16 +34,12 @@ public class GetItemListApiController {
 	 * @param LIMIT  返すデータ数を指定する Default: 30
 	 * @param offset 先頭からずらす個数    Default: 0
 	 */
-	@RequestMapping(path = "/api/v1/items", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/v1/genre", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public ResponseEntity<HashMap<String, Object>> viewPage(
 			Model model,
-			HttpSession session,
-			@RequestParam(name = "offset", defaultValue = "0") int offset,
-			@RequestParam(name = "limit", defaultValue = "30") int limit,
-			@RequestParam(name = "sortC", defaultValue = "id") String sort,
-			@RequestParam(name = "sortV", defaultValue = "ASC") String sortVector
+			HttpSession session
 		) {
 		boolean isOK = true;
 		HttpHeaders headers = new HttpHeaders();
@@ -51,25 +49,14 @@ public class GetItemListApiController {
 		if(obj == null) {
 			isOK = false;
 		} else {
-			sort = sort.toLowerCase();
-			switch(sort) {
-			case "id":
-			case "name":
-			case "price":
-			case "amount":
-				sort = "item_"+sort;
-				break;
-			default:
-				sort = "item_id";
-				break;
-			}
 			try {
-				data.put("items", repository.findAll());
-			} catch (Exception e) {
+				List<Genre> genre = repository.findAll();
+				genre.add(0, Genre.getBlank());
+				data.put("genre", genre);
+			} catch ( Exception e ) {
 				isOK = false;
 			}
 		}
-		
 		HttpStatus status = HttpStatus.OK;
 		if(isOK) {
 			out.put("data", data);
@@ -82,5 +69,5 @@ public class GetItemListApiController {
 		}
 		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
 	}
-
+	
 }

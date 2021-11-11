@@ -1,4 +1,4 @@
-package com.example.demo.controller.api;
+package com.example.demo.controller.api.app;
 
 import java.util.HashMap;
 import java.util.List;

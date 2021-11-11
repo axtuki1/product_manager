@@ -1,7 +1,6 @@
-package com.example.demo.controller.api;
+package com.example.demo.controller.api.app;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,33 +12,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.entity.Genre;
-import com.example.demo.repository.GenreRepository;
+import com.example.demo.repository.ItemRepository;
 
 @Controller
-public class GetGenreListApiController {
-	
+public class GetItemApiController {
+
 	@Autowired
-	GenreRepository repository;
-	
+	ItemRepository repository;
+
 	/**
 	 * 商品一覧を返すAPI。
-	 * @Endpoint /api/v1/items 
+	 * @Endpoint /api/v1/item/{id}
 	 * @Method GET
-	 * @param LIMIT  返すデータ数を指定する Default: 30
-	 * @param offset 先頭からずらす個数    Default: 0
 	 */
-	@RequestMapping(path = "/api/v1/genre", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/v1/item/{id}", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public ResponseEntity<HashMap<String, Object>> viewPage(
 			Model model,
-			HttpSession session
+			HttpSession session,
+			@PathVariable(name = "id") int id
 		) {
 		boolean isOK = true;
 		HttpHeaders headers = new HttpHeaders();
@@ -49,14 +47,9 @@ public class GetGenreListApiController {
 		if(obj == null) {
 			isOK = false;
 		} else {
-			try {
-				List<Genre> genre = repository.findAll();
-				genre.add(0, Genre.getBlank());
-				data.put("genre", genre);
-			} catch ( Exception e ) {
-				isOK = false;
-			}
+			data.put("itemData", repository.findById(id));
 		}
+		
 		HttpStatus status = HttpStatus.OK;
 		if(isOK) {
 			out.put("data", data);
@@ -69,5 +62,5 @@ public class GetGenreListApiController {
 		}
 		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
 	}
-	
+
 }
