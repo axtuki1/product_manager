@@ -43,6 +43,13 @@ const router = new VueRouter({
         },
       ],
     },
+    {
+      path: "/settings",
+      component: httpVueLoader("/vue/page/settings/index.vue"),
+      children: [
+        { path: "", component: httpVueLoader("/vue/page/settings/general.vue") },
+      ],
+    },
     { path: "*", component: httpVueLoader("/vue/notfound.vue") },
   ],
 });
