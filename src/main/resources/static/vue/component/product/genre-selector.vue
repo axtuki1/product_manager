@@ -1,10 +1,23 @@
 <template>
-  <div class="genre-selector">じゃんるじぇね</div>
+  <div class="genre-selector">
+    <div class="loading" v-show="loading">
+      <i class="fas fa-circle-notch anim"></i>
+      <loading-text style="font-weight: bold"></loading-text>
+    </div>
+    <div class="genre-list" v-if="!loading">
+      あいうえお
+    </div>
+  </div>
 </template>
 
 <script>
 module.exports = {
   props: ["itemData", "info"],
+  data(){
+    return {
+      loading: true,
+    }
+  },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
   },

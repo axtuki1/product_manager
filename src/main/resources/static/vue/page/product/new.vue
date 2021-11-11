@@ -18,6 +18,13 @@
         <div class="selected-name">{{ this.genreList[this.productGenre].name }}</div>
       </div>
     </div>
+    <button
+        v-on:click="registerItem"
+        class="registerItem btn primary"
+      >
+        <div v-if="isProcessing"><i class="fas fa-spinner"></i></div>
+        <div v-else>登録</div>
+      </button>
   </div>
 </template>
 
@@ -30,6 +37,7 @@ module.exports = {
       productPrice: 0,
       productAmount: 0,
       productGenre: 0,
+      isProcessing: false,
       genreList: [
         {
           id: 0,
@@ -48,6 +56,9 @@ module.exports = {
         httpVueLoader("/vue/component/product/genre-selector.vue")
       );
     },
+    registerItem(){
+
+    }
   },
   mounted() {
     this.$emit("update-title", "新規追加");

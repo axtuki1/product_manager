@@ -254,6 +254,29 @@ module.exports = {
   opacity: 0;
 }
 
+.loading {
+  position: relative;
+  display: flex;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+}
+
+i.anim {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  animation-duration: 1s;
+  animation-name: fa-spin;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+
 label {
   width: 100%;
 }

@@ -10,7 +10,7 @@
         指定された商品は見つかりませんでした。
       </div>
     </div>
-    <div class="item-details" v-if="!error">
+    <div class="item-details" v-if="!error && !loading">
       <h1>{{ itemData.name }}</h1>
       <div class="infomation">
         <infomation-item
