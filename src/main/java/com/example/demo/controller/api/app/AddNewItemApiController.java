@@ -1,7 +1,6 @@
 package com.example.demo.controller.api.app;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,58 +13,82 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.entity.Genre;
-import com.example.demo.repository.GenreRepository;
+import com.example.demo.entity.Item;
+import com.example.demo.form.NewItemInsertForm;
+import com.example.demo.repository.ItemRepository;
 
 @Controller
-public class GetGenreApiController {
-	
+public class AddNewItemApiController {
+
 	@Autowired
-	GenreRepository repository;
-	
+	ItemRepository repository;
+
 	/**
-	 * 商品一覧を返すAPI。
-	 * @Endpoint /api/v1/genre/{id}
+	 * 新規に商品を追加するAPI。
+	 * @Endpoint /api/v1/item/new
 	 * @Method GET
 	 */
-	@RequestMapping(path = "/api/v1/genre/{id}", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/v1/item/new", method = RequestMethod.POST)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public ResponseEntity<HashMap<String, Object>> viewPage(
 			Model model,
 			HttpSession session,
-			@PathVariable(name = "id") int id
+			@RequestBody NewItemInsertForm form
 		) {
-		boolean isOK = true;
+		boolean authOK = true,isOK = true;
 		HttpHeaders headers = new HttpHeaders();
 	    headers.add("Connection", "Keep-Alive");
 		HashMap<String, Object> out = new HashMap<>(), data = new HashMap<>();
 		Object obj = session.getAttribute("userData");
 		if(obj == null) {
-			isOK = false;
+			authOK = false;
 		} else {
-			try {
-				data.put("genre", repository.findById(id));
-			} catch ( Exception e ) {
+			// 入力値チェック
+			if(
+					form.getPrice() < 0 ||
+					form.getGenre() < 0 || 
+					form.getAmount() < 0
+				) {
 				isOK = false;
+			} else {
+				System.out.println(form.getName()+" / "+
+					form.getPrice()+" / "+
+					form.getAmount()+" / "+
+					form.getGenre());
+				repository.save(Item.genItem(
+					0,
+					form.getName(),
+					form.getPrice(),
+					form.getAmount(),
+					form.getGenre()
+				));
+				data.put("result","ok");
 			}
+			
 		}
+		
 		HttpStatus status = HttpStatus.OK;
-		if(isOK) {
+		if(!authOK){
+			out.put("statusCode", 401);
+			out.put("message", "認証に失敗しました。");
+			status = HttpStatus.UNAUTHORIZED;
+		} else if(isOK) {
 			out.put("data", data);
 			out.put("statusCode", 200);
 			out.put("message", "ok");
 		} else {
-			out.put("statusCode", 401);
-			out.put("message", "認証に失敗しました。");
-			status = HttpStatus.UNAUTHORIZED;
+			out.put("statusCode", 400);
+			out.put("message", "入力が不正です。");
+			status = HttpStatus.BAD_REQUEST;
 		}
 		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
 	}
-	
+
 }

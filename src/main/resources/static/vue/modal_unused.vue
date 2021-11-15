@@ -1,3 +1,5 @@
+// 本ファイルは使用しないが、代替となる実装がないため同時参照用として保存している。
+
 <template>
   <div
     class="modal-wrapper"
@@ -5,7 +7,13 @@
     v-on:click.stop.prevent.self="clickBackgound"
   >
     <div class="modal">
-      <slot></slot>
+      <div class="modal-header" v-if="this.modal.title != ''">
+        {{ this.modal.title }}
+      </div>
+      <div class="modal-content"></div>
+      <button class="btn primary close-btn" v-on:click="closeModal">
+        {{ this.modal.ok_btn.text }}
+      </button>
     </div>
   </div>
 </template>
@@ -13,7 +21,6 @@
 <script>
 module.exports = {
   props: ["modal"],
-  emits: [""],
   data() {
     return {
       show: false,
@@ -22,10 +29,15 @@ module.exports = {
   },
   methods: {
     clickBackgound() {
-      this.closeModal();
+      if (!this.modal.force_ok) this.closeModal();
     },
     closeModal() {
+      if (this.modal.ok_btn.func() === false) return;
+
       this.close = true;
+      setTimeout(() => {
+        this.$emit("close", this.modal.id);
+      }, 1000);
     },
   },
   mounted() {

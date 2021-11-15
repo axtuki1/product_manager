@@ -51,17 +51,17 @@ public class GetGenreListApiController {
 		} else {
 			try {
 				List<Genre> genre = repository.findAll();
-				genre.add(0, Genre.getBlank());
 				data.put("genre", genre);
 			} catch ( Exception e ) {
 				isOK = false;
+				e.printStackTrace();
 			}
 		}
 		HttpStatus status = HttpStatus.OK;
 		if(isOK) {
 			out.put("data", data);
 			out.put("statusCode", 200);
-			out.put("status", "ok");
+			out.put("message", "ok");
 		} else {
 			out.put("statusCode", 401);
 			out.put("message", "認証に失敗しました。");

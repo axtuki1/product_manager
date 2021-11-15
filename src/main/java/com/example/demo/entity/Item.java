@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,43 +12,55 @@ import javax.persistence.Table;
 public class Item {
 	@Id
 	@Column(name = "item_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
 	@Column(name = "item_name")
 	public String name;
 	@Column(name = "item_price")
-	public String price;
+	public Integer price;
 	@Column(name = "item_amount")
-	public String amount;
+	public Integer amount;
 	@Column(name = "itemGenre")
-	public String genre;
+	public Integer genre;
+	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
-	public void setPrice(String price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
-	public String getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
-	public String getGenre() {
+	public Integer getGenre() {
 		return genre;
 	}
-	public void setGenre(String genre) {
+	public void setGenre(Integer genre) {
 		this.genre = genre;
+	}
+	public static Item genItem(Integer id, String name, Integer price, Integer amount, Integer genre) {
+		Item item = new Item();
+		item.setId(id);
+		item.setName(name);
+		item.setPrice(price);
+		item.setAmount(amount);
+		item.setGenre(genre);
+		return item;
 	}
 }

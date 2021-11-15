@@ -18,8 +18,16 @@
         :key="modal.id"
         :modal="modal"
         @close="closeModal"
-        >
+      >
       </modal>
+      <notice
+        v-for="notice in notices"
+        :key="notice.id"
+        :notice="notice"
+        @close-n="closeNotice"
+      >
+        {{notice.content}}
+      </notice>
     </div>
   </div>
 </template>
@@ -47,14 +55,20 @@ const router = new VueRouter({
       path: "/settings",
       component: httpVueLoader("/vue/page/settings/index.vue"),
       children: [
-        { path: "", component: httpVueLoader("/vue/page/settings/general.vue") },
+        {
+          path: "",
+          component: httpVueLoader("/vue/page/settings/general.vue"),
+        },
       ],
     },
     {
       path: "/analytics",
       component: httpVueLoader("/vue/page/analytics/index.vue"),
       children: [
-        { path: "", component: httpVueLoader("/vue/page/analytics/general.vue") },
+        {
+          path: "",
+          component: httpVueLoader("/vue/page/analytics/general.vue"),
+        },
       ],
     },
     { path: "*", component: httpVueLoader("/vue/notfound.vue") },
@@ -72,6 +86,8 @@ module.exports = {
       },
       modals: [],
       modalCount: 0,
+      notices: [],
+      noticeCount: 0,
     };
   },
   router: router,
@@ -81,10 +97,14 @@ module.exports = {
     error: httpVueLoader("/vue/error.vue"),
     apiconsole: httpVueLoader("/vue/debug/apiconsole.vue"),
     modal: httpVueLoader("/vue/modal.vue"),
+    notice: httpVueLoader("/vue/notice.vue"),
   },
   methods: {
     closeModal(id) {
       this.modals = this.modals.filter((item) => item.id != id);
+    },
+    closeNotice(id) {
+      this.notices = this.notices.filter((item) => item.id != id);
     },
   },
   mounted() {
@@ -139,6 +159,18 @@ module.exports = {
           component: options.component,
         });
         v.modalCount++;
+      },
+      callNotice(content, options) {
+        const default_options = {
+          sec: 3
+        };
+        options = Object.assign(default_options, options);
+        v.notices.push({
+          id: v.noticeCount,
+          content: content,
+          sec: options.sec
+        });
+        v.noticeCount++;
       },
     };
 

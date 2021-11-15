@@ -54,7 +54,7 @@ public class GetItemApiController {
 		if(isOK) {
 			out.put("data", data);
 			out.put("statusCode", 200);
-			out.put("status", "ok");
+			out.put("message", "ok");
 		} else {
 			out.put("statusCode", 401);
 			out.put("message", "認証に失敗しました。");
