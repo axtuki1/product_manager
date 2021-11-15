@@ -49,6 +49,11 @@ const router = new VueRouter({
           component: httpVueLoader("/vue/page/product/details.vue"),
           props: true,
         },
+        {
+          path: ":id/edit",
+          component: httpVueLoader("/vue/page/product/edit.vue"),
+          props: true,
+        },
       ],
     },
     {

@@ -24,7 +24,7 @@ import com.example.demo.form.NewItemInsertForm;
 import com.example.demo.repository.ItemRepository;
 
 @Controller
-public class AddNewItemApiController {
+public class EditItemApiController {
 
 	@Autowired
 	ItemRepository repository;
@@ -34,13 +34,14 @@ public class AddNewItemApiController {
 	 * @Endpoint /api/v1/item/new
 	 * @Method GET
 	 */
-	@RequestMapping(path = "/api/v1/item/new", method = RequestMethod.POST)
+	@RequestMapping(path = "/api/v1/item/{id}/edit", method = RequestMethod.POST)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public ResponseEntity<HashMap<String, Object>> viewPage(
 			Model model,
 			HttpSession session,
-			@RequestBody NewItemInsertForm form
+			@RequestBody NewItemInsertForm form,
+			@PathVariable(name = "id") int id
 		) {
 		boolean authOK = true,isOK = true;
 		HttpHeaders headers = new HttpHeaders();
@@ -59,7 +60,7 @@ public class AddNewItemApiController {
 				isOK = false;
 			} else {
 				repository.save(Item.genItem(
-					0,
+					id,
 					form.getName(),
 					form.getPrice(),
 					form.getAmount(),
