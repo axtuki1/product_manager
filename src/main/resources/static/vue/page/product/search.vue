@@ -1,5 +1,5 @@
 <template>
-  <div class="search-view" style="overflow:hidden;">
+  <div class="search-view" style="overflow: hidden">
     <div class="search-container">
       [検索窓設置場所]
       <button
@@ -19,6 +19,7 @@
         v-bind:key="item.name"
         v-bind:item="item"
         :genre-list="genreList"
+        @reload="reload"
       ></product-item>
     </div>
   </div>
@@ -37,9 +38,22 @@ module.exports = {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
     "product-item": httpVueLoader("/vue/component/product/product-item.vue"),
   },
-  methods: {},
+  methods: {
+    reload() {
+      fetch("/api/v1/items", {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((d) => d.json())
+        .then((j) => {
+          this.itemList = j.data.items;
+          this.loading = false;
+        });
+    },
+  },
   mounted() {
-    
     this.$emit("update-title", "");
     fetch("/api/v1/genre", {
       method: "GET",
@@ -50,17 +64,7 @@ module.exports = {
       .then((d) => d.json())
       .then((j) => {
         this.genreList = j.data.genre;
-      });
-    fetch("/api/v1/items", {
-      method: "GET",
-      headers: new Headers({
-        "content-type": "application/json",
-      }),
-    })
-      .then((d) => d.json())
-      .then((j) => {
-        this.itemList = j.data.items;
-        this.loading = false;
+        this.reload();
       });
   },
 };
@@ -68,8 +72,8 @@ module.exports = {
 
 <style scoped>
 .search-view {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -82,8 +86,7 @@ h1 {
 }
 
 .item-list {
-    overflow: auto;
-    flex-grow: 1;
+  overflow: auto;
+  flex-grow: 1;
 }
-
 </style>
