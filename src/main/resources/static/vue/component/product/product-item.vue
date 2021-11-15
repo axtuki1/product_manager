@@ -21,7 +21,10 @@
         }}</span>
       </div>
     </div>
-    <button class="btn edit" v-on:click.stop.prevent="editPush"><i class="fas fa-pencil-alt"> 編集</i></button>
+    <div class="moderatorBtn">
+      <button class="btn edit" v-on:click.stop.prevent="editPush"><i class="fas fa-pencil-alt"></i> 編集</button>
+      <button class="btn remove danger" v-on:click.stop.prevent="removePush"><i class="fas fa-trash-alt"></i> 削除</button>
+    </div>
   </div>
 </template>
 
@@ -37,6 +40,9 @@ module.exports = {
     },
     editPush() {
       this.$router.push("/product/"+this.item.id+"/edit");
+    },
+    removePush() {
+      
     }
   },
 };
@@ -55,7 +61,7 @@ module.exports = {
   box-shadow: 0px 0px 7.5px rgba(0, 0, 0, 0.4);
 }
 
-.edit {
+.moderatorBtn {
   position: absolute;
   right: 15px;
   top: 15px;

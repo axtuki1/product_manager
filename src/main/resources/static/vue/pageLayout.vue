@@ -353,6 +353,7 @@ input {
   border: 0px;
   user-select: none;
   transition: background-color ease 50ms;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -364,6 +365,7 @@ input {
   background: rgb(182, 182, 182);
   color: rgb(0, 0, 0);
 }
+
 
 .btn.primary {
   background: rgb(31, 53, 255);
@@ -384,6 +386,30 @@ input {
 .btn.primary.disable:hover,
 .btn.primary.disable:active {
   background: rgb(84, 98, 223);
+  color: rgb(182, 182, 182);
+  cursor: not-allowed;
+}
+
+
+.btn.danger {
+  background: rgb(255, 76, 31);
+  color: rgb(255, 255, 255);
+}
+
+.btn.danger:hover {
+  background: rgb(255, 130, 92);
+  color: rgb(255, 255, 255);
+}
+
+.btn.danger:active {
+  background: rgb(212, 97, 52);
+  color: rgb(199, 199, 199);
+}
+
+.btn.danger.disable,
+.btn.danger.disable:hover,
+.btn.danger.disable:active {
+  background: rgb(223, 93, 84);
   color: rgb(182, 182, 182);
   cursor: not-allowed;
 }
