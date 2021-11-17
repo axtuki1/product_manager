@@ -61,11 +61,12 @@ module.exports = {
       bottomList: [
         {
           id: "register",
-          name: "会計ツール",
+          name: '会計ツール',
           icon: '<i class="fas fa-cash-register fa-fw"></i>',
           func() {
             location.href = "/register"
           },
+          external: true
         },
         {
           id: "settings",
@@ -133,6 +134,10 @@ module.exports = {
 
 .close .sidebar-item.close .icon i {
   transform: rotate(180deg) translateY(0.3px);
+}
+
+.sidebar-item .external {
+  margin: 0 7px;
 }
 
 </style>

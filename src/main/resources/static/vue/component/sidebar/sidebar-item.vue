@@ -2,6 +2,7 @@
   <div class="sidebar-item" v-on:click="clickFunction">
     <div class="icon" v-html="item.icon"></div>
     <div class="name">{{ item.name }}</div>
+    <div class="external" v-if="item.external"><i class="fas fa-external-link-alt"></i></div>
   </div>
 </template>
 

@@ -86,6 +86,10 @@ h1 {
   border-bottom: 1px solid #000;
 }
 
+.loading i {
+  margin-bottom: 10px;
+}
+
 .item-list {
   overflow: auto;
   flex-grow: 1;

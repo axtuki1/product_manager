@@ -321,7 +321,6 @@ module.exports = {
 
 i.anim {
   font-size: 1.5em;
-  margin-bottom: 10px;
   animation-duration: 1s;
   animation-name: fa-spin;
   animation-timing-function: ease;

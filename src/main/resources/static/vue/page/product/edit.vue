@@ -55,7 +55,7 @@
         </option>
       </select>
     </div>
-    <button v-on:click="registerItem" class="registerItem btn primary">
+    <button v-on:click="registerItem" class="registerItem btn primary"  v-bind:class="{processing: isProcessing}">
       <div v-if="isProcessing"><i class="fas fa-spinner"></i></div>
       <div v-else>登録</div>
     </button>
@@ -177,16 +177,27 @@ h1 {
   padding: 10px 15px;
 }
 
-i {
-  font-size: 1.5em;
-  margin-bottom: 10px;
+.registerItem div {
+  transform: rotate(0deg);
 }
 
-i.anim {
+.registerItem.processing div {
+  animation-name: rotate;
   animation-duration: 1s;
-  animation-name: fa-spin;
-  animation-timing-function: ease;
+  animation-timing-function: steps(7);
   animation-iteration-count: infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error_text {

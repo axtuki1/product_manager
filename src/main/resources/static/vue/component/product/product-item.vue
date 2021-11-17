@@ -29,7 +29,7 @@
         <i class="fas fa-trash-alt"></i> 削除
       </button>
     </div>
-    <div class="deleting-window" v-bind:class="{ show: deleting }">
+    <div class="deleting-window" v-on:click.stop.prevent="/* nope */" v-bind:class="{ show: deleting }">
       <span class="progress-icon"><i class="fas fa-circle-notch anim"></i></span> 削除中...
     </div>
   </div>
@@ -75,7 +75,7 @@ module.exports = {
               { sec: 3 }
             );
           });
-      }, 1000);
+      }, 100);
     },
   },
 };
@@ -130,6 +130,7 @@ i.anim {
   pointer-events: none;
   transition: all ease 200ms;
   font-size: 1.2em;
+  user-select: none;
 }
 
 .deleting-window.show {

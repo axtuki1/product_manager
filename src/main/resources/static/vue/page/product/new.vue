@@ -44,7 +44,7 @@
         </option>
       </select>
     </div>
-    <button v-on:click="registerItem" class="registerItem btn primary">
+    <button v-on:click="registerItem" class="registerItem btn primary" v-bind:class="{processing: isProcessing}">
       <div v-if="isProcessing"><i class="fas fa-spinner"></i></div>
       <div v-else>登録</div>
     </button>
@@ -78,6 +78,7 @@ module.exports = {
     openGenreSelector() {},
     registerItem() {
       this.isProcessing = true;
+      setTimeout(() => {
       fetch("/api/v1/item/new", {
         method: "POST",
         headers: new Headers({
@@ -110,6 +111,7 @@ module.exports = {
             this.productGenre = 0;
           }
         });
+      },10);
     },
     check(n, e) {
       let value = e.srcElement.value;
@@ -144,6 +146,29 @@ h1 {
 
 .product-add {
   padding: 10px 15px;
+}
+
+.registerItem div {
+  transform: rotate(0deg);
+}
+
+.registerItem.processing div {
+  animation-name: rotate;
+  animation-duration: 1s;
+  animation-timing-function: steps(7);
+  animation-iteration-count: infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error_text {
