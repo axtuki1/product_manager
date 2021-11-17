@@ -30,8 +30,7 @@
       </button>
     </div>
     <div class="deleting-window" v-bind:class="{ show: deleting }">
-      <div><i class="fas fa-circle-notch anim"></i></div>
-      <div>削除中...</div>
+      <span class="progress-icon"><i class="fas fa-circle-notch anim"></i></span> 削除中...
     </div>
   </div>
 </template>
@@ -108,6 +107,14 @@ module.exports = {
 .price {
 }
 
+.progress-icon {
+  margin-right: 10px;;
+}
+
+i.anim {
+  margin: 0;
+}
+
 .deleting-window {
   position: absolute;
   top: 0;
@@ -117,11 +124,12 @@ module.exports = {
   align-items: center;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  color: #fff;
+  background: rgba(0, 0, 0, 0.2);
+  color: #000;
   opacity: 0;
   pointer-events: none;
   transition: all ease 200ms;
+  font-size: 1.2em;
 }
 
 .deleting-window.show {
