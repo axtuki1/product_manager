@@ -40,6 +40,7 @@ module.exports = {
   },
   methods: {
     reload() {
+      this.loading = true;
       fetch("/api/v1/items", {
         method: "GET",
         headers: new Headers({

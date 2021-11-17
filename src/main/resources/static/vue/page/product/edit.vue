@@ -127,6 +127,7 @@ module.exports = {
               "商品:" + this.productName + "を編集しました。",
               3
             );
+            this.$router.push("/product");
           }
         });
     },
@@ -188,4 +189,7 @@ i.anim {
   animation-iteration-count: infinite;
 }
 
+.error_text {
+  color: #f00;
+}
 </style>

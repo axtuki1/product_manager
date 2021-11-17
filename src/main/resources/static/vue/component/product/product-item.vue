@@ -1,5 +1,9 @@
 <template>
-  <div class="product-item" v-on:click="push" v-bind:class="[item.id]">
+  <div
+    class="product-item"
+    v-on:click="push"
+    v-bind:class="{ deleting: deleting }"
+  >
     <div class="name">{{ item.name }}</div>
     <div class="infomation">
       <div class="price">
@@ -25,12 +29,21 @@
         <i class="fas fa-trash-alt"></i> 削除
       </button>
     </div>
+    <div class="deleting-window" v-bind:class="{ show: deleting }">
+      <div><i class="fas fa-circle-notch anim"></i></div>
+      <div>削除中...</div>
+    </div>
   </div>
 </template>
 
 <script>
 module.exports = {
   props: ["item", "genre-list"],
+  data() {
+    return {
+      deleting: false,
+    };
+  },
   mounted() {},
   methods: {
     push() {
@@ -40,20 +53,30 @@ module.exports = {
       this.$router.push("/product/" + this.item.id + "/edit");
     },
     removePush() {
-      fetch("/api/v1/item/"+this.item.id, {
-        method: "DELETE",
-        headers: new Headers({
-          "content-type": "application/json",
-        }),
-      })
-        .then((res) => res.json())
-        .then((j) => {
-          this.$APPDATA.util_methods.callNotice("商品を削除しました。",{sec: 3});
-          this.$emit("reload");
+      this.deleting = true;
+      setTimeout(() => {
+        fetch("/api/v1/item/" + this.item.id, {
+          method: "DELETE",
+          headers: new Headers({
+            "content-type": "application/json",
+          }),
         })
-        .catch((error) => {
-          v.$APPDATA.util_methods.callNotice("削除処理中にエラーが発生しました。",{sec: 3});
-        });
+          .then((res) => res.json())
+          .then((j) => {
+            this.deleting = false;
+            this.$APPDATA.util_methods.callNotice("商品を削除しました。", {
+              sec: 3,
+            });
+            this.$emit("reload");
+          })
+          .catch((error) => {
+            this.deleting = false;
+            v.$APPDATA.util_methods.callNotice(
+              "削除処理中にエラーが発生しました。",
+              { sec: 3 }
+            );
+          });
+      }, 1000);
     },
   },
 };
@@ -83,5 +106,26 @@ module.exports = {
 }
 
 .price {
+}
+
+.deleting-window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: all ease 200ms;
+}
+
+.deleting-window.show {
+  opacity: 1;
+  pointer-events: all;
 }
 </style>

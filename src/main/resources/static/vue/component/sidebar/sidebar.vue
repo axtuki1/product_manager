@@ -60,6 +60,14 @@ module.exports = {
       ],
       bottomList: [
         {
+          id: "register",
+          name: "会計ツール",
+          icon: '<i class="fas fa-cash-register fa-fw"></i>',
+          func() {
+            location.href = "/register"
+          },
+        },
+        {
           id: "settings",
           name: "設定",
           icon: '<i class="fas fa-cog fa-fw"></i>',

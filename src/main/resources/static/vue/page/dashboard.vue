@@ -12,7 +12,7 @@
 module.exports = {
   data: function() {
     return {
-      title: 'page2.vue'
+      title: 'dashboard'
     }
   },
   methods:{
@@ -33,6 +33,6 @@ module.exports = {
 
 <style scoped>
 h1 {
-    color: blue;
+    color: black;
 }
 </style>

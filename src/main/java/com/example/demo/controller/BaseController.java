@@ -48,7 +48,38 @@ public class BaseController {
 		}
 	}
 
-	@RequestMapping(path = "/api/v1/**", method = RequestMethod.GET)
+	// レジスター用
+	
+	@RequestMapping(path = "/register/**", method = RequestMethod.GET)
+	@ResponseBody
+	public Resource register_endpoint(ModelAndView mav) {
+		try {
+			return new ClassPathResource("static/register/index.html");
+		} catch (Exception e) {
+			mav.setStatus(HttpStatus.NOT_FOUND);
+			return new ClassPathResource("static/register/error.html");
+		}
+	}
+	
+	@RequestMapping(path = "/register/{dataType:vue|css|js}/**", method = RequestMethod.GET)
+	@ResponseBody
+	public Resource register_endpoint_resource(ModelAndView mav, HttpServletRequest request) {
+		try {
+			Resource res = new ClassPathResource("static/register"+request.getRequestURI());
+			res.getFile(); // 存在確認させるためのアレ
+			return res;
+		} catch (FileNotFoundException e) {
+			mav.setStatus(HttpStatus.NOT_FOUND);
+			return new ClassPathResource("static/register/error.html");
+		} catch (IOException e) {
+			mav.setStatus(HttpStatus.NOT_FOUND);
+			return new ClassPathResource("static/register/error.html");
+		}
+	}
+	
+	
+	
+	@RequestMapping(path = "/api/v1/**")
 	@ResponseBody
 	@CrossOrigin
 	public HashMap<String, Object> apiDefaultError(ModelAndView model) {

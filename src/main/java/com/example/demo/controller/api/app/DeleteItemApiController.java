@@ -39,7 +39,7 @@ public class DeleteItemApiController {
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public ResponseEntity<HashMap<String, Object>> viewPage(Model model, HttpSession session,
-			@RequestBody NewItemInsertForm form, @PathVariable(name = "id") int id) {
+			@PathVariable(name = "id") int id) {
 		boolean authOK = true, isOK = true;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Connection", "Keep-Alive");
