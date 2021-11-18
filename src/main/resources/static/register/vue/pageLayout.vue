@@ -33,8 +33,9 @@
 <script>
 const router = new VueRouter({
   mode: "history",
+  relative: true,
   routes: [
-    { path: "/", component: httpVueLoader("/vue/base.vue") },
+    { path: "/register", component: httpVueLoader("/register/vue/base.vue") },
     { path: "*", component: httpVueLoader("/vue/notfound.vue") },
   ],
 });
@@ -208,11 +209,6 @@ module.exports = {
 
 .outline-content-wrapper {
   width: 100%;
-}
-
-.outline-content-wrapper.loggined {
-  width: calc(100% - 55px);
-  margin-left: 55px;
 }
 
 .outline-content {

@@ -1,6 +1,54 @@
 <template>
-  <div class="loading-screen-wrapper">
-     ばせー～～～～
+  <div class="base">
+    <div class="left">
+      <div class="current-shopping-details">
+        <div class="registed-history">
+          履歴
+        </div>
+        <div class="total-count">
+          <div class="label">個数</div>
+          <div class="value"></div>
+        </div>
+        <div class="billing-amount">
+          <div class="label">小計</div>
+          <div class="value"></div>
+        </div>
+        <div class="discount-amount">
+          <div class="label">割引</div>
+          <div class="value"></div>
+        </div>
+        <div class="billing-total-amount">
+          <div class="label">合計</div>
+          <div class="value"></div>
+        </div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="catalog">
+        catalog
+      </div>
+      <div class="keypad">
+        <div class="top">
+          <button>7</button>
+          <button>8</button>
+          <button>9</button>
+        </div>
+        <div class="top">
+          <button>4</button>
+          <button>5</button>
+          <button>6</button>
+        </div>
+        <div class="top">
+          <button>1</button>
+          <button>2</button>
+          <button>3</button>
+        </div>
+        <div class="top">
+          <button>0</button>
+          <button>00</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,44 +61,24 @@ module.exports = {
 </script>
 
 <style scoped>
-.loading-screen-wrapper {
-  z-index: 100;
-  position: fixed;
+
+.base {
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 100%;
-  transition: opacity ease 250ms;
-  opacity: 0;
-  color: #000;
-  /* background: linear-gradient(
-    -45deg,
-    rgba(0, 0, 0, .2) 25%,
-    rgba(0, 0, 0, .4) 25%,
-    rgba(0, 0, 0, .4) 50%,
-    rgba(0, 0, 0, .2) 50%,
-    rgba(0, 0, 0, .2) 75%,
-    rgba(0, 0, 0, .4) 75%,
-    rgba(0, 0, 0, .4)
-  ); */
-  background: rgb(36, 68, 110);
-  background-size: 10px 10px;
-
-  pointer-events: none;
 }
 
-.loading-screen-wrapper.show {
-  pointer-events: all;
-  opacity: 1;
+.left, .right {
+  flex: 1;
+  margin: 20px;
 }
 
-.loading-screen {
-  /* padding: 10px 20px; */
-  /* background: #fff; */
-  /* border-radius: 10px; */
-  font-size: 1.6em;
-  color: #FFF;
+.current-shopping-details {
+  height: 100%;
+  border-radius: 10px;
+  background: rgb(241, 241, 241);
+  padding: 20px;
 }
+
 
 </style>

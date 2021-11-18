@@ -57,7 +57,7 @@ public class BaseController {
 			return new ClassPathResource("static/register/index.html");
 		} catch (Exception e) {
 			mav.setStatus(HttpStatus.NOT_FOUND);
-			return new ClassPathResource("static/register/error.html");
+			return new ClassPathResource("static/error.html");
 		}
 	}
 	
@@ -65,15 +65,15 @@ public class BaseController {
 	@ResponseBody
 	public Resource register_endpoint_resource(ModelAndView mav, HttpServletRequest request) {
 		try {
-			Resource res = new ClassPathResource("static/register"+request.getRequestURI());
+			Resource res = new ClassPathResource("static/"+request.getRequestURI());
 			res.getFile(); // 存在確認させるためのアレ
 			return res;
 		} catch (FileNotFoundException e) {
 			mav.setStatus(HttpStatus.NOT_FOUND);
-			return new ClassPathResource("static/register/error.html");
+			return new ClassPathResource("static/error.html");
 		} catch (IOException e) {
 			mav.setStatus(HttpStatus.NOT_FOUND);
-			return new ClassPathResource("static/register/error.html");
+			return new ClassPathResource("static/error.html");
 		}
 	}
 	
