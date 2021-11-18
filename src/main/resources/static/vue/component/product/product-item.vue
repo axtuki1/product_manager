@@ -53,7 +53,7 @@ module.exports = {
     },
     removePush() {
       this.deleting = true;
-      setTimeout(() => {
+      const deleteMethod = () => {
         fetch("/api/v1/item/" + this.item.id, {
           method: "DELETE",
           headers: new Headers({
@@ -75,7 +75,9 @@ module.exports = {
               { sec: 3 }
             );
           });
-      }, 100);
+      };
+      
+      deleteMethod();
     },
   },
 };
@@ -113,6 +115,10 @@ module.exports = {
 
 i.anim {
   margin: 0;
+}
+
+.btn i {
+  margin-right: 6px;
 }
 
 .deleting-window {

@@ -9,11 +9,7 @@
         新規追加
       </button>
     </div>
-    <div class="loading" v-show="loading">
-      <i class="fas fa-circle-notch anim"></i>
-      <loading-text style="font-weight: bold"></loading-text>
-    </div>
-    <div class="item-list">
+    <div class="item-list" v-show="!loading">
       <product-item
         v-for="item in itemList"
         v-bind:key="item.name"
@@ -21,6 +17,10 @@
         :genre-list="genreList"
         @reload="reload"
       ></product-item>
+    </div>
+    <div class="loading" v-show="loading || nextloading">
+      <i class="fas fa-circle-notch anim"></i>
+      <loading-text style="font-weight: bold"></loading-text>
     </div>
   </div>
 </template>
@@ -30,6 +30,7 @@ module.exports = {
   data: function () {
     return {
       loading: true,
+      nextloading: false,
       itemList: {},
       genreList: {},
     };

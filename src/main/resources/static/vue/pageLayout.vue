@@ -36,7 +36,17 @@
 const router = new VueRouter({
   mode: "history",
   routes: [
-    { path: "/", component: httpVueLoader("/vue/page/dashboard.vue") },
+    
+    {
+      path: "/",
+      component: httpVueLoader("/vue/page/dashboard/index.vue"),
+      children: [
+        {
+          path: "",
+          component: httpVueLoader("/vue/page/dashboard/dashboard.vue"),
+        },
+      ],
+    },
     { path: "/login", component: httpVueLoader("/vue/page/login.vue") },
     {
       path: "/product",
@@ -345,6 +355,9 @@ input {
 }
 
 .btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   padding: 7.5px 12.5px;
   background: rgb(235, 235, 235);
   color: rgb(0, 0, 0);

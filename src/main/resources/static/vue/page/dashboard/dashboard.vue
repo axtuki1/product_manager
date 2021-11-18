@@ -1,18 +1,18 @@
 <template>
-  <div class="analytics">
-    <div v-show="!loading">
+  <div class="dashboard">
+    <div v-show="!loading" class="dashboard-content">
       <div class="this-month-total-seles">
-        <div class="label">
+        <div class="title">
           今月の売上
-          <div class="upper-per"><span>伸び率</span>: <span>0.1%</span></div>
         </div>
+        <div class="upper-per"><span>伸び率</span>: <span>0.1%</span></div>
         <div class="value">1,100,000円</div>
       </div>
-      <div class="before-month-total-seles">
-        <div class="label">
-          先月の売上
-        </div>
-        <div class="value">1,000,000円</div>
+      <div class="ranking">
+        <div class="title">売上トップ</div>
+        <div class="first">1位 / 商品A</div>
+        <div class="second">2位 / 商品B</div>
+        <div class="third">3位 / 商品C</div>
       </div>
     </div>
     <div class="loading" v-show="loading">
@@ -27,7 +27,6 @@ module.exports = {
   data: function () {
     return {
       loading: true,
-
     };
   },
   components: {
@@ -46,16 +45,13 @@ h1 {
   margin: 0;
 }
 
-.analytics {
+.dashboard {
   padding: 10px 15px;
   border-bottom: 1px solid #000;
 }
 
-.this-month-total-seles,
-.before-month-total-seles {
+.dashboard-content > * {
   margin: 10px 0;
-  font-size: 2.5rem;
-  font-weight: bold;
   background: rgb(235, 235, 235);
   border-radius: 10px;
   padding: 10px 15px;
@@ -63,16 +59,23 @@ h1 {
 
 .this-month-total-seles .label,
 .before-month-total-seles .label {
-  font-size: .75em;
+  font-size: 0.75em;
 }
 
+.this-month-total-seles,
 .before-month-total-seles {
-  font-size: 2rem;
+  font-weight: bold;
+  font-size: 2.5em;
 }
 
 .value {
   width: 100%;
   text-align: right;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .this-month-total-seles .upper-per {
