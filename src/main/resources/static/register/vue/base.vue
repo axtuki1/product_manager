@@ -182,9 +182,14 @@ module.exports = {
 }
 
 .current-shopping-details .bottom {
-  height: 125px;
+  height: 170px;
   display: flex;
   flex-direction: column;
+}
+
+.current-shopping-details .bottom > *{
+  padding: 10px;
+  border-top: 1px solid #000;
 }
 
 .catalog {
