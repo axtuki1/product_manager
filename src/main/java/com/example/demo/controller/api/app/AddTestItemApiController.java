@@ -55,7 +55,8 @@ public class AddTestItemApiController {
 						"テスト",
 						0,
 						0,
-						0
+						0,
+						""
 					));
 			}
 			data.put("result","ok");

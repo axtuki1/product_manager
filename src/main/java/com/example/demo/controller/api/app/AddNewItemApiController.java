@@ -52,6 +52,7 @@ public class AddNewItemApiController {
 		} else {
 			// 入力値チェック
 			if(
+					form.getName().equals("") ||
 					form.getPrice() < 0 ||
 					form.getGenre() < 0 || 
 					form.getAmount() < 0
@@ -63,7 +64,8 @@ public class AddNewItemApiController {
 					form.getName(),
 					form.getPrice(),
 					form.getAmount(),
-					form.getGenre()
+					form.getGenre(),
+					form.getCode() == null ? "" : form.getCode()
 				));
 				data.put("result","ok");
 			}

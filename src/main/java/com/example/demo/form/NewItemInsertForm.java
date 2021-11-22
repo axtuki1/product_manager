@@ -1,7 +1,7 @@
 package com.example.demo.form;
 
 public class NewItemInsertForm {
-	private String name;
+	private String name, code;
 	private int price, amount, genre;
 	public String getName() {
 		return name;
@@ -26,6 +26,12 @@ public class NewItemInsertForm {
 	}
 	public void setGenre(int genre) {
 		this.genre = genre;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 	
 }

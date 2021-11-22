@@ -187,6 +187,23 @@ module.exports = {
         });
         v.noticeCount++;
       },
+      emptyCheck(values){
+        for(let i = 0; i < values.length; i++){
+          if(values[i].toString() == "") return false;
+        }
+        return true;
+      },
+      numberCheck(values){
+        for(let i = 0; i < values.length; i++){
+          if(values[i].v.toString() == "") return false;
+          if(Number(values[i].v) == NaN) return false;
+          if(values[i].min > values[i].v) return false;
+          if(values[i].v > values[i].max) return false;
+        }
+        
+        return true;
+      }
+
     };
 
     let isInit = false;

@@ -13,7 +13,8 @@
     <div class="item-edit-form" v-if="!error && !loading">
       <div class="inputField productName">
       <label for="productName">商品名</label>
-      <input type="text" v-model="productName" />
+      <input type="text" v-model="productName" 
+        v-on:input="check(0, $event, 255)"/>
       <span class="error_text" v-if="inputErrors[0] != ''">{{
         inputErrors[0]
       }}</span>
@@ -55,6 +56,15 @@
         </option>
       </select>
     </div>
+    <div class="inputField barcode">
+      <label for="barcode">バーコード (省略可)</label>
+      <input type="text"
+        v-model="barcode" 
+        v-on:input="check(3, $event, 18, false)"/>
+      <span class="error_text" v-if="inputErrors[3] != ''">{{
+        inputErrors[3]
+      }}</span>
+    </div>
     <button v-on:click="registerItem" class="registerItem btn primary"  v-bind:class="{processing: isProcessing}">
       <div v-if="isProcessing"><i class="fas fa-spinner"></i></div>
       <div v-else>登録</div>
@@ -75,6 +85,7 @@ module.exports = {
       productPrice: 0,
       productAmount: 0,
       productGenre: 0,
+      barcode: "",
       isProcessing: false,
       inputErrors: [],
       genreList: [
@@ -91,18 +102,69 @@ module.exports = {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
   },
   methods: {
-    check(n, e) {
+    check(n, e, max = 99999, required = true) {
       let value = e.srcElement.value;
       this.inputErrors[n] = "";
-      if (value == "") {
+      if (value == "" && required) {
         this.inputErrors[n] = "このフィールドは必須です。";
       } else if (typeof value == "number" && value < 0) {
         this.inputErrors[n] = "0以上の値を入力してください。";
+      } else if (typeof value == "string" && value.length > max) {
+        this.inputErrors[n] = "最大文字数は" + max + "です。";
       }
+    },
+    allCheck() {
+      const output = {
+        isOK: true,
+        error: [],
+      };
+      if (
+        !this.$APPDATA.util_methods.emptyCheck([
+          this.productName,
+          this.productPrice,
+          this.productAmount,
+          this.productGenre,
+        ])
+      ) {
+        // 空データチェック trueでOK
+        output.isOK = false;
+        output.error.push("必須のフィールドが入力されていません。");
+      }
+      if (
+        !this.$APPDATA.util_methods.numberCheck([
+          {
+            v: this.productAmount,
+            min: 0,
+            max: Infinity,
+          },
+          {
+            v: this.productPrice,
+            min: 0,
+            max: Infinity,
+          },
+          {
+            v: this.productGenre,
+            min: 0,
+            max: Infinity,
+          },
+        ])
+      ) {
+        output.isOK = false;
+        output.error.push("入力値が不正です。");
+      }
+      return output;
     },
     registerItem() {
       this.isProcessing = true;
-      fetch("/api/v1/item/"+this.productId+"/edit", {
+      const check = this.allCheck();
+      if (!check.isOK) {
+        this.isProcessing = false;
+        for (let i = 0; i < check.error.length; i++) {
+          this.$APPDATA.util_methods.callNotice(check.error[i], 3);
+        }
+        return;
+      }
+      fetch("/api/v1/item/" + this.productId + "/edit", {
         method: "POST",
         headers: new Headers({
           "content-type": "application/json",
@@ -112,6 +174,7 @@ module.exports = {
           price: this.productPrice,
           amount: this.productAmount,
           genre: this.productGenre,
+          code: this.barcode,
         }),
       })
         .then((d) => d.json())
@@ -142,12 +205,12 @@ module.exports = {
     })
       .then((d) => d.json())
       .then((j) => {
-        console.log(j);
-        this.productId =     j.data.itemData.id;
-        this.productName =   j.data.itemData.name;
-        this.productPrice =  j.data.itemData.price;
+        this.productId = j.data.itemData.id;
+        this.productName = j.data.itemData.name;
+        this.productPrice = j.data.itemData.price;
         this.productAmount = j.data.itemData.amount;
-        this.productGenre =  j.data.itemData.genre;
+        this.productGenre = j.data.itemData.genre;
+        this.barcode = j.data.itemData.code;
         fetch("/api/v1/genre", {
           method: "GET",
           headers: new Headers({
