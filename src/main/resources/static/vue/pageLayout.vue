@@ -26,7 +26,7 @@
         :notice="notice"
         @close-n="closeNotice"
       >
-        {{notice.content}}
+        {{ notice.content }}
       </notice>
     </div>
   </div>
@@ -36,7 +36,6 @@
 const router = new VueRouter({
   mode: "history",
   routes: [
-    
     {
       path: "/",
       component: httpVueLoader("/vue/page/dashboard/index.vue"),
@@ -177,33 +176,32 @@ module.exports = {
       },
       callNotice(content, options) {
         const default_options = {
-          sec: 3
+          sec: 3,
         };
         options = Object.assign(default_options, options);
         v.notices.push({
           id: v.noticeCount,
           content: content,
-          sec: options.sec
+          sec: options.sec,
         });
         v.noticeCount++;
       },
-      emptyCheck(values){
-        for(let i = 0; i < values.length; i++){
-          if(values[i].toString() == "") return false;
+      emptyCheck(values) {
+        for (let i = 0; i < values.length; i++) {
+          if (values[i].toString() == "") return false;
         }
         return true;
       },
-      numberCheck(values){
-        for(let i = 0; i < values.length; i++){
-          if(values[i].v.toString() == "") return false;
-          if(Number(values[i].v) == NaN) return false;
-          if(values[i].min > values[i].v) return false;
-          if(values[i].v > values[i].max) return false;
+      numberCheck(values) {
+        for (let i = 0; i < values.length; i++) {
+          if (values[i].v.toString() == "") return false;
+          if (Number(values[i].v) == NaN) return false;
+          if (values[i].min > values[i].v) return false;
+          if (values[i].v > values[i].max) return false;
         }
-        
-        return true;
-      }
 
+        return true;
+      },
     };
 
     let isInit = false;
@@ -229,22 +227,26 @@ module.exports = {
 
     // 資格情報の確認
 
-    fetch("/api/v1/auth", {
-      method: "GET",
-      headers: new Headers({
-        "content-type": "application/json",
-      }),
-    })
-      .then((res) => res.json())
-      .then((loginResult) => {
-        if (loginResult.status == "ok") {
-          this.$APPDATA.isLogin = true;
-        }
-        isInit = true;
+    const checkLogin = () => {
+      fetch("/api/v1/auth", {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
       })
-      .catch((error) => {
-        this.FATALERROR_BOOL = true;
-      });
+        .then((res) => res.json())
+        .then((loginResult) => {
+          if (loginResult.status == "ok") {
+            this.$APPDATA.isLogin = true;
+          }
+          isInit = true;
+        })
+        .catch((error) => {});
+    };
+    setInterval(() => {
+      checkLogin();
+    }, 20 * 60 * 1000);
+    checkLogin();
   },
 };
 </script>
@@ -395,7 +397,6 @@ input {
   color: rgb(0, 0, 0);
 }
 
-
 .btn.primary {
   background: rgb(31, 53, 255);
   color: rgb(255, 255, 255);
@@ -418,7 +419,6 @@ input {
   color: rgb(182, 182, 182);
   cursor: not-allowed;
 }
-
 
 .btn.danger {
   background: rgb(255, 76, 31);

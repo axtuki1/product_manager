@@ -1,20 +1,25 @@
+<i18n>
+{
+    "ja":{
+        "totalCount": "${0} 個",
+        "total": "${0}円",
+        "smallTotal": "${0}円",
+        "discount": "${0}円"
+    }
+}
+</i18n>
+
 <template>
   <div class="base">
     <div class="left">
       <div class="current-shopping-details">
         <div class="registed-history">
-          <div class="item-wrapper">
-            <div class="name">商品名商品名商品名</div>
-            <div class="type">登録</div>
-            <div class="payment">
-              <div class="amount">3個</div>
-              <div class="price">@500円</div>
-              <div class="small-total">
-                <div class="value">500円</div>
-                <div class="label">小　計</div>
-              </div>
-            </div>
-          </div>
+          <item-wrapper
+            v-for="item in items"
+            :key="item.id"
+            :item="item"
+          >
+          </item-wrapper>
 
           <div class="item-wrapper deleted">
             <div class="name">商品名商品名商品名</div>
@@ -85,6 +90,18 @@
 
 <script>
 module.exports = {
+  data() {
+    return {
+      items: [],
+      inputMode: 0,
+      currentInputData: "",
+      totalCount: 0,
+      total: 0,
+      smallTotal: 0,
+      discount: 0,
+
+    };
+  },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
   },
@@ -182,14 +199,29 @@ module.exports = {
 }
 
 .current-shopping-details .bottom {
-  height: 170px;
+  height: 210px;
   display: flex;
   flex-direction: column;
 }
 
-.current-shopping-details .bottom > *{
+.current-shopping-details .bottom > * {
+  position: relative;
   padding: 10px;
   border-top: 1px solid #000;
+}
+
+.current-shopping-details .bottom .value {
+  position: absolute;
+  bottom:10px;
+  right:10px;
+}
+
+.current-shopping-details .bottom .billing-total-amount {
+  flex-grow: 1.5;
+}
+
+.current-shopping-details .bottom .billing-total-amount .value {
+  font-size: 1.3em;
 }
 
 .catalog {

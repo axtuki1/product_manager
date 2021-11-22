@@ -85,7 +85,7 @@ module.exports = {
           .then((loginResult) => {
             if (loginResult.status == "ok") {
               v.$APPDATA.isLogin = false;
-              v.$router.push("/login");
+              location.href = "/login";
             }
           })
           .catch((error) => {
