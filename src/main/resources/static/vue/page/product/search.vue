@@ -1,15 +1,24 @@
 <template>
   <div class="search-view" style="overflow: hidden">
     <div class="search-container">
-      [検索窓設置場所]
       <button
         v-on:click="$router.push('product/new')"
         class="btn primary addItem"
       >
         新規追加
       </button>
+      <div class="search-query-input-wrapper">
+        <input
+          type="text"
+          v-model="searchQuery"
+          class="search-query-input"
+          placeholder="検索..."
+          v-on:keyup.enter="search"
+        />
+        <i class="fas fa-search search-icon"></i>
+      </div>
     </div>
-    <div class="item-list" v-show="!loading">
+    <div class="item-list" v-show="!loading && itemList.length != 0">
       <product-item
         v-for="item in itemList"
         v-bind:key="item.name"
@@ -22,6 +31,10 @@
       <i class="fas fa-circle-notch anim"></i>
       <loading-text style="font-weight: bold"></loading-text>
     </div>
+    <div class="nope" v-show="(loading || nextloading) && itemList.length == 0">
+      <i class="fas fa-circle-warning anim"></i>
+      <div style="font-weight: bold;">お探しの商品は見つかりませんでした。</div>
+    </div>
   </div>
 </template>
 
@@ -31,6 +44,7 @@ module.exports = {
     return {
       loading: true,
       nextloading: false,
+      searchQuery: "",
       itemList: {},
       genreList: {},
     };
@@ -54,6 +68,24 @@ module.exports = {
           this.loading = false;
         });
     },
+    search() {
+      this.loading = true;
+      const params = {
+          q: this.searchQuery
+      };
+      fetch("/api/v1/search?"+new URLSearchParams(params), {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((d) => d.json())
+        .then((j) => {
+          this.itemList = j.data.items;
+          console.log(this.itemList.length);
+          this.loading = false;
+        });
+    },
   },
   mounted() {
     this.$emit("update-title", "");
@@ -73,6 +105,35 @@ module.exports = {
 </script>
 
 <style scoped>
+
+.search-query-input-wrapper{
+  position: relative;
+  display: inline-block;
+  width: 70%;
+}
+
+.search-query-input {
+  border-radius: 15rem;
+  padding: 10px 12.5px;
+}
+
+.search-query-input-wrapper .search-icon {
+  position: absolute;
+  right: 12.5px;
+  top: 10px;
+  cursor: pointer;
+  transition: all ease 100ms;
+  color: rgb(71, 71, 71);
+}
+
+.search-query-input-wrapper .search-icon:hover {
+  transform: scale(1.2);
+}
+
+.search-query-input-wrapper .search-icon:active {
+  transform: scale(0.8);
+}
+
 .search-view {
   display: flex;
   flex-direction: column;

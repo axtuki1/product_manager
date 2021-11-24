@@ -11,5 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.entity.Item;
 
 public interface ItemRepository extends JpaRepository<Item,Integer>, JpaSpecificationExecutor<Item> {
+
+	List<Item> findByNameLike(String query);
 //    List<Item> findAllSort(int offset, int limit, String sort);
 }

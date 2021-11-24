@@ -377,6 +377,7 @@ label {
 input {
   width: 100%;
   outline: none;
+  border: 1px solid rgb(94, 94, 94);
 }
 
 .inputField {
