@@ -205,7 +205,9 @@ module.exports = {
     };
 
     let isInit = false;
+    
     setTimeout(() => {
+      this.$APPDATA.loginBeforeViewPage = this.$router.currentRoute.fullPath;
       let id = setInterval(() => {
         if (isInit) {
           this.$set(this, "loading", false);
@@ -213,6 +215,7 @@ module.exports = {
             !this.$APPDATA.isLogin &&
             this.$router.currentRoute.fullPath != "/login"
           ) {
+            // ログイン画面に飛ばす
             this.$router.push("/login");
           } else if (
             this.$APPDATA.isLogin &&
@@ -238,14 +241,25 @@ module.exports = {
         .then((loginResult) => {
           if (loginResult.status == "ok") {
             this.$APPDATA.isLogin = true;
+            this.$APPDATA.disconnectedDetected = false;
+          } else {
+            if(isInit && this.$APPDATA.loginBeforeViewPage != "/login" && !this.$APPDATA.disconnectedDetected){
+              // 通常時にログインが死んでることに気が付いたら
+              this.$APPDATA.loginBeforeViewPage = this.$router.currentRoute.fullPath;
+              this.$APPDATA.isLogin = false;
+              this.$APPDATA.disconnectedDetected = true;
+              this.$APPDATA.util_methods.callModal("現在の接続が何らかの操作で切断されていました。\nお手数ですが再度ログインをお願いします。");
+              this.$router.push("/login");
+            }
           }
           isInit = true;
         })
         .catch((error) => {});
     };
+
     setInterval(() => {
-      checkLogin();
-    }, 20 * 60 * 1000);
+      if(this.$APPDATA.isLogin) checkLogin();
+    }, 10 * 1000);
     checkLogin();
   },
 };

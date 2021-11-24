@@ -20,6 +20,12 @@
           genreList[item.genre] == null ? "未指定" : genreList[item.genre].name
         }}</span>
       </div>
+      <div class="barcode">
+        <span class="key">バーコード:</span>
+        <span class="value">{{
+          item.code == "" ? "未指定" : item.code
+        }}</span>
+      </div>
     </div>
     <div class="moderatorBtn">
       <button class="btn edit" v-on:click.stop.prevent="editPush">

@@ -5,7 +5,8 @@
     v-on:click.stop.prevent.self="clickBackgound"
   >
     <div class="modal">
-      <slot></slot>
+      <slot class="modal-content">{{ modal.content }}<button class="btn primary" v-on:click="closeModal">OK</button>
+      </slot>
     </div>
   </div>
 </template>
@@ -30,26 +31,9 @@ module.exports = {
   },
   mounted() {
     this.close = false;
-    // 苦
-    if (typeof this.modal.content == "function") {
-      this.modal.content().then((e) => {
-        const ins = new (Vue.extend(e))();
-        ins.$mount();
-        this.$el.querySelector(".modal-content").appendChild(ins.$el);
-        setTimeout(() => {
-          this.show = true;
-        }, 10);
-      });
-    } else {
-      if( typeof this.modal.content == "Node" ){
-        this.$el.querySelector(".modal-content").appendChild(this.modal.content);
-      } else {
-        this.$el.querySelector(".modal-content").innerHTML = this.modal.content;
-      }
-      setTimeout(() => {
+    setTimeout(() => {
         this.show = true;
-      }, 10);
-    }
+    }, 20);
   },
 };
 </script>
@@ -98,6 +82,8 @@ module.exports = {
   font-size: 1.1em;
   border-radius: 10px;
   user-select: none;
+  white-space: pre-line;
+  text-align: center;
 }
 
 .modal-wrapper.show .modal {

@@ -55,7 +55,7 @@ module.exports = {
   },
   methods: {
     loggedIn(){
-      this.$router.push("/");
+      this.$router.push(this.$APPDATA.loginBeforeViewPage.toLowerCase() == "/login" ? "/" : this.$APPDATA.loginBeforeViewPage);
     },
     passEnter(e) {
       if (e.key == "Enter") {

@@ -5,7 +5,9 @@ const app = new Vue({
     },
     beforeCreate() {
         Vue.prototype.$APPDATA = {
-            isLogin: false
+            isLogin: false,
+            loginBeforeViewPage: "/",
+            disconnectedDetected: false
         }
     },
 });
