@@ -15,7 +15,7 @@
           placeholder="検索..."
           v-on:keyup.enter="search"
         />
-        <i class="fas fa-search search-icon"></i>
+        <i class="fas fa-search search-icon" v-on:click="search"></i>
       </div>
     </div>
     <div class="item-list" v-show="!loading && itemList.length != 0">
@@ -31,9 +31,9 @@
       <i class="fas fa-circle-notch anim"></i>
       <loading-text style="font-weight: bold"></loading-text>
     </div>
-    <div class="nope" v-show="(loading || nextloading) && itemList.length == 0">
-      <i class="fas fa-circle-warning anim"></i>
-      <div style="font-weight: bold;">お探しの商品は見つかりませんでした。</div>
+    <div class="nope" v-show="!loading && itemList.length == 0">
+      <i class="fas fa-question-circle"></i>
+      <div style="font-weight: bold;">入力された文字を含む商品は見つかりませんでした。</div>
     </div>
   </div>
 </template>
@@ -55,6 +55,10 @@ module.exports = {
   },
   methods: {
     reload() {
+      if(this.searchQuery != ""){
+        this.search();
+        return;
+      } 
       this.loading = true;
       fetch("/api/v1/items", {
         method: "GET",
@@ -82,7 +86,6 @@ module.exports = {
         .then((d) => d.json())
         .then((j) => {
           this.itemList = j.data.items;
-          console.log(this.itemList.length);
           this.loading = false;
         });
     },
@@ -155,5 +158,24 @@ h1 {
 .item-list {
   overflow: auto;
   flex-grow: 1;
+}
+
+.nope {
+  position: relative;
+  display: flex;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+}
+
+.nope i {
+  font-size: 2em;
+  margin-bottom: 10px;
 }
 </style>

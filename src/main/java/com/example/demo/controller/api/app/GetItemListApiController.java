@@ -35,7 +35,7 @@ public class GetItemListApiController {
 	@RequestMapping(path = "/api/v1/items", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
-	public ResponseEntity<HashMap<String, Object>> viewPage(
+	public HashMap<String, Object> viewPage(
 			Model model,
 			HttpSession session,
 			@RequestParam(name = "offset", defaultValue = "0") int offset,
@@ -43,44 +43,21 @@ public class GetItemListApiController {
 			@RequestParam(name = "sortC", defaultValue = "id") String sort,
 			@RequestParam(name = "sortV", defaultValue = "ASC") String sortVector
 		) {
-		boolean isOK = true;
-		HttpHeaders headers = new HttpHeaders();
-	    headers.add("Connection", "Keep-Alive");
-		HashMap<String, Object> out = new HashMap<>(), data = new HashMap<>();
-		Object obj = session.getAttribute("userData");
-		if(obj == null) {
-			isOK = false;
-		} else {
-			sort = sort.toLowerCase();
-			switch(sort) {
-			case "id":
-			case "name":
-			case "price":
-			case "amount":
-				sort = "item_"+sort;
-				break;
-			default:
-				sort = "item_id";
-				break;
-			}
-			try {
-				data.put("items", repository.findAll());
-			} catch (Exception e) {
-				isOK = false;
-			}
+		HashMap<String, Object> data = new HashMap<>();
+		sort = sort.toLowerCase();
+		switch(sort) {
+		case "id":
+		case "name":
+		case "price":
+		case "amount":
+			sort = "item_"+sort;
+			break;
+		default:
+			sort = "item_id";
+			break;
 		}
-		
-		HttpStatus status = HttpStatus.OK;
-		if(isOK) {
-			out.put("data", data);
-			out.put("statusCode", 200);
-			out.put("message", "ok");
-		} else {
-			out.put("statusCode", 401);
-			out.put("message", "認証に失敗しました。");
-			status = HttpStatus.UNAUTHORIZED;
-		}
-		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
+		data.put("items", repository.findAll());
+		return data;
 	}
 
 }

@@ -28,39 +28,18 @@ public class GetItemApiController {
 
 	/**
 	 * 商品一覧を返すAPI。
+	 * 
 	 * @Endpoint /api/v1/item/{id}
 	 * @Method GET
 	 */
 	@RequestMapping(path = "/api/v1/item/{id}", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
-	public ResponseEntity<HashMap<String, Object>> viewPage(
-			Model model,
-			HttpSession session,
-			@PathVariable(name = "id") int id
-		) {
-		boolean isOK = true;
-		HttpHeaders headers = new HttpHeaders();
-	    headers.add("Connection", "Keep-Alive");
-		HashMap<String, Object> out = new HashMap<>(), data = new HashMap<>();
-		Object obj = session.getAttribute("userData");
-		if(obj == null) {
-			isOK = false;
-		} else {
-			data.put("itemData", repository.findById(id));
-		}
-		
-		HttpStatus status = HttpStatus.OK;
-		if(isOK) {
-			out.put("data", data);
-			out.put("statusCode", 200);
-			out.put("message", "ok");
-		} else {
-			out.put("statusCode", 401);
-			out.put("message", "認証に失敗しました。");
-			status = HttpStatus.UNAUTHORIZED;
-		}
-		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
+	public HashMap<String, Object> viewPage(Model model, HttpSession session,
+			@PathVariable(name = "id") int id) {
+		HashMap<String, Object> data = new HashMap<>();
+		data.put("itemData", repository.findById(id));
+		return data;
 	}
 
 }

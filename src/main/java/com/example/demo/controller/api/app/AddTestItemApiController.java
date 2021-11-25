@@ -37,47 +37,23 @@ public class AddTestItemApiController {
 	@RequestMapping(path = "/api/v1/item/new/testingtasting", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
-	public ResponseEntity<HashMap<String, Object>> viewPage(
+	public HashMap<String, Object> viewPage(
 			Model model,
 			HttpSession session
 		) {
-		boolean authOK = true,isOK = true;
-		HttpHeaders headers = new HttpHeaders();
-	    headers.add("Connection", "Keep-Alive");
-		HashMap<String, Object> out = new HashMap<>(), data = new HashMap<>();
-		Object obj = session.getAttribute("userData");
-		if(obj == null) {
-			authOK = false;
-		} else {
-			for(int i = 0; i < 10; i++) {
-				repository.save(Item.genItem(
-						0,
-						"テスト",
-						0,
-						0,
-						0,
-						""
-					));
-			}
-			data.put("result","ok");
-			
+		HashMap<String, Object> data = new HashMap<>();
+		for(int i = 0; i < 10; i++) {
+			repository.save(Item.genItem(
+					0,
+					"テスト",
+					0,
+					0,
+					0,
+					""
+				));
 		}
-		
-		HttpStatus status = HttpStatus.OK;
-		if(!authOK){
-			out.put("statusCode", 401);
-			out.put("message", "認証に失敗しました。");
-			status = HttpStatus.UNAUTHORIZED;
-		} else if(isOK) {
-			out.put("data", data);
-			out.put("statusCode", 200);
-			out.put("message", "ok");
-		} else {
-			out.put("statusCode", 400);
-			out.put("message", "入力が不正です。");
-			status = HttpStatus.BAD_REQUEST;
-		}
-		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
+		data.put("result","ok");
+		return data;
 	}
 
 }

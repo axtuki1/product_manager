@@ -37,56 +37,31 @@ public class AddNewItemApiController {
 	@RequestMapping(path = "/api/v1/item/new", method = RequestMethod.POST)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
-	public ResponseEntity<HashMap<String, Object>> viewPage(
+	public HashMap<String, Object> viewPage(
 			Model model,
 			HttpSession session,
 			@RequestBody NewItemInsertForm form
 		) {
-		boolean authOK = true,isOK = true;
-		HttpHeaders headers = new HttpHeaders();
-	    headers.add("Connection", "Keep-Alive");
-		HashMap<String, Object> out = new HashMap<>(), data = new HashMap<>();
-		Object obj = session.getAttribute("userData");
-		if(obj == null) {
-			authOK = false;
+		HashMap<String, Object> data = new HashMap<>();
+		if(
+				form.getName().equals("") ||
+				form.getPrice() < 0 ||
+				form.getGenre() < 0 || 
+				form.getAmount() < 0
+			) {
+			return null;
 		} else {
-			// 入力値チェック
-			if(
-					form.getName().equals("") ||
-					form.getPrice() < 0 ||
-					form.getGenre() < 0 || 
-					form.getAmount() < 0
-				) {
-				isOK = false;
-			} else {
-				repository.save(Item.genItem(
-					0,
-					form.getName(),
-					form.getPrice(),
-					form.getAmount(),
-					form.getGenre(),
-					form.getCode() == null ? "" : form.getCode()
-				));
-				data.put("result","ok");
-			}
-			
+			repository.save(Item.genItem(
+				0,
+				form.getName(),
+				form.getPrice(),
+				form.getAmount(),
+				form.getGenre(),
+				form.getCode() == null ? "" : form.getCode()
+			));
+			data.put("result","ok");
 		}
-		
-		HttpStatus status = HttpStatus.OK;
-		if(!authOK){
-			out.put("statusCode", 401);
-			out.put("message", "認証に失敗しました。");
-			status = HttpStatus.UNAUTHORIZED;
-		} else if(isOK) {
-			out.put("data", data);
-			out.put("statusCode", 200);
-			out.put("message", "ok");
-		} else {
-			out.put("statusCode", 400);
-			out.put("message", "入力が不正です。");
-			status = HttpStatus.BAD_REQUEST;
-		}
-		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
+		return data;
 	}
 
 }
