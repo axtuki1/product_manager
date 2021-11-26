@@ -3,6 +3,7 @@ package com.example.demo.interceptor;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,8 +14,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.example.demo.entity.Genre;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 @Aspect
@@ -42,19 +46,19 @@ public class RequiredLoginInterceptor {
 		}
 		HttpStatus status = HttpStatus.OK;
 		if (!isOK) {
-			out.put("statusCode", HttpStatus.UNAUTHORIZED);
 			out.put("message", "認証に失敗しました。");
 			status = HttpStatus.UNAUTHORIZED;
 		} else if (data != null) {
 			out.put("data", data);
-			out.put("statusCode", 200);
 			out.put("message", "ok");
 		} else {
-			out.put("statusCode", HttpStatus.BAD_REQUEST);
 			out.put("message", "入力が不正です。");
 			status = HttpStatus.BAD_REQUEST;
 		}
-		return out;
+		out.put("statusCode", status);
+//		if(status == HttpStatus.OK)
+			return out;
+		// *痛み*
 //		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
 	}
 }
