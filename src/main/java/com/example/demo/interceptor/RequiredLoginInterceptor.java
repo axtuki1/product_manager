@@ -55,7 +55,7 @@ public class RequiredLoginInterceptor {
 			out.put("message", "入力が不正です。");
 			status = HttpStatus.BAD_REQUEST;
 		}
-		out.put("statusCode", status);
+		out.put("statusCode", status.value());
 //		if(status == HttpStatus.OK)
 			return out;
 		// *痛み*
