@@ -15,6 +15,8 @@
         <div class="close" v-on:click="this.isOpen = false">✖</div>
       </div>
       <div class="content">
+        <button v-on:click="$APPDATA.util_methods.logout" class="btn primary">Logout</button>
+        <hr>
         <div class="inputField api_endpoint">
           <label for="api_endpoint">API Endpoint</label>
           <input type="text" id="api_endpoint" v-model="api_endpoint" />
