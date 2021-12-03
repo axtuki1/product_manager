@@ -49,6 +49,18 @@ module.exports = {
           id: "genre",
           key: "ジャンル",
         },
+        {
+          id: "price",
+          key: "単価",
+        },
+        {
+          id: "amount",
+          key: "個数",
+        },
+        {
+          id: "code",
+          key: "バーコード",
+        },
       ],
     };
   },

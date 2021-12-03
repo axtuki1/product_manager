@@ -1,7 +1,10 @@
 <template>
   <div class="infomation-item" v-bind:class="info.id">
     <div class="key">{{ this.info.key }}</div>
-    <div class="value">{{ (this.itemData.genre != null ? this.itemData.genre.name : "-") }}</div>
+    <div class="value">{{ (
+      this.itemData[this.info.id] != null && this.itemData[this.info.id].toString() != "" ? (
+        (this.itemData[this.info.id].name != null ? this.itemData[this.info.id].name : this.itemData[this.info.id])
+      ) : "-") }}</div>
   </div>
 </template>
 

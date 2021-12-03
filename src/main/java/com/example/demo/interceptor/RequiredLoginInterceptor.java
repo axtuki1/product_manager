@@ -56,7 +56,7 @@ public class RequiredLoginInterceptor {
 			status = HttpStatus.BAD_REQUEST;
 		}
 		out.put("statusCode", status.value());
-//		if(status == HttpStatus.OK)
+//		if(status == HttpStatus.OK) 
 			return out;
 		// *痛み*
 //		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
