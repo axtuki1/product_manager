@@ -16,6 +16,7 @@
       </div>
       <div class="content">
         <button v-on:click="$APPDATA.util_methods.logout" class="btn primary">Logout</button>
+        <button v-on:click="silent_logout" class="btn primary">Logout (silent)</button>
         <hr>
         <div class="inputField api_endpoint">
           <label for="api_endpoint">API Endpoint</label>
@@ -100,6 +101,24 @@ module.exports = {
     },
     release(e) {
       this.isGrabbing = false;
+    },
+    silent_logout() {
+      fetch("/api/v1/logout", {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((res) => res.json())
+        .then((loginResult) => {
+        })
+        .catch((error) => {
+          console.log(error);
+          v.$APPDATA.util_methods.fatal_error_handle(
+            "ログアウト処理中にエラーが発生しました",
+            "通信環境を再度確認してください。"
+          );
+        });
     },
   },
 };

@@ -103,7 +103,7 @@ module.exports = {
         method: "GET",
         headers: new Headers({
           "content-type": "application/json",
-          Authorization: btoa(this.user_name + ":" + this.password),
+          Authorization: btoa(unescape(encodeURIComponent(this.user_name + ":" + this.password))),
         }),
       })
         .then((res) => res.json())
