@@ -1,27 +1,13 @@
-<i18n>
-{
-    "ja":{
-        "totalCount": "${0} 個",
-        "total": "${0}円",
-        "smallTotal": "${0}円",
-        "discount": "${0}円"
-    }
-}
-</i18n>
 
 <template>
   <div class="base">
     <div class="left">
       <div class="current-shopping-details">
         <div class="registed-history">
-          <item-wrapper
-            v-for="item in items"
-            :key="item.id"
-            :item="item"
-          >
+          <item-wrapper v-for="item in items" :key="item.id" :item="item">
+            {{ item }}
           </item-wrapper>
-
-          <div class="item-wrapper deleted">
+          <!-- <div class="item-wrapper deleted">
             <div class="name">商品名商品名商品名</div>
             <div class="type">登録</div>
             <div class="payment">
@@ -32,24 +18,24 @@
                 <div class="label">小　計</div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="bottom">
           <div class="total-count">
-            <div class="label">個数</div>
-            <div class="value"></div>
+            <div class="label">{{ $t("totalCount.label") }}</div>
+            <div class="value">{{ $t("totalCount.value", [numberFormat(totalCount)]) }}</div>
           </div>
           <div class="billing-amount">
-            <div class="label">小計</div>
-            <div class="value"></div>
+            <div class="label">{{ $t("smallTotal.label") }}</div>
+            <div class="value">{{ $t("smallTotal.value", [numberFormat(smallTotal)]) }}</div>
           </div>
           <div class="discount-amount">
-            <div class="label">割引</div>
-            <div class="value"></div>
+            <div class="label">{{ $t("discount.label") }}</div>
+            <div class="value">{{ $t("discount.value", [numberFormat(discount)]) }}</div>
           </div>
           <div class="billing-total-amount">
-            <div class="label">合計</div>
-            <div class="value"></div>
+            <div class="label">{{ $t("total.label") }}</div>
+            <div class="value">{{ $t("total.value", [numberFormat(total)]) }}</div>
           </div>
         </div>
       </div>
@@ -57,6 +43,9 @@
     <div class="right">
       <div class="catalog">catalog</div>
       <div class="controls">
+        <div>
+          
+        </div>
         <div class="keypad">
           <div class="top">
             <button>7</button>
@@ -80,8 +69,8 @@
           </div>
         </div>
         <div class="actions">
-          <button>金額<br />入力</button>
-          <button>登録</button>
+          <button>{{ $t("button.changeInput.price") }}</button>
+          <button>{{ $t("button.changeInput.register") }}</button>
         </div>
       </div>
     </div>
@@ -99,11 +88,86 @@ module.exports = {
       total: 0,
       smallTotal: 0,
       discount: 0,
-
     };
+  },
+  methods: {
+    numberFormat(num) {
+      return (num || 0)
+        .toString()
+        .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
+    },
+    recalc(){
+      for(let i = 0; i < this.items.length;i++){
+        const item = this.items[i];
+        this.totalCount += item.amount;
+        this.smallTotal += item.price * item.amount;
+      }
+      this.total = this.smallTotal - this.discount;
+    }
+  },
+  i18n: {
+    messages: {
+      ja: {
+        totalCount: {
+          label: "個数",
+          value: "{0}個"
+        },
+        total: {
+          label: "合計",
+          value: "{0}円"
+        },
+        smallTotal: {
+          label: "小計",
+          value: "{0}円"
+        },
+        discount: {
+          label: "割引",
+          value: "{0}円"
+        },
+        button: {
+          changeInput: {
+            price: "金額\n入力",
+            register: "登録",
+          },
+        },
+      },
+    },
   },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
+    "item-wrapper": httpVueLoader("/register/vue/component/item-wrapper.vue"),
+  },
+  mounted() {
+    window.v = this;
+    this.items.push({
+      id: 1,
+      name: "名前",
+      type: "register",
+      amount: 10,
+      price: 10,
+    });
+    this.items.push({
+      id: 2,
+      name: "名前",
+      type: "register",
+      amount: 150,
+      price: 105,
+    });
+    this.items.push({
+      id: 3,
+      name: "名前",
+      type: "register",
+      amount: 1042,
+      price: 120,
+    });
+    this.items.push({
+      id: 4,
+      name: "名前",
+      type: "register",
+      amount: 1,
+      price: 10136,
+    });
+    this.recalc();
   },
 };
 </script>
@@ -140,62 +204,7 @@ module.exports = {
 
 .registed-history {
   flex-grow: 1;
-}
-
-.item-wrapper {
-  position: relative;
-  border-bottom: 1px solid #000;
-  padding: 20px;
-  font-size: 1.2em;
-}
-
-.item-wrapper.deleted {
-  color: #f00;
-}
-
-.item-wrapper .name {
-  font-weight: bold;
-  font-size: 1.3em;
-}
-
-.item-wrapper .type {
-  position: absolute;
-  bottom: 20px;
-}
-
-.item-wrapper .payment {
-  width: 100%;
-  display: flex;
-  text-align: right;
-  justify-content: flex-end;
-  align-items: baseline;
-}
-
-.item-wrapper .amount {
-}
-
-.item-wrapper .price {
-  margin: 0 10px;
-}
-
-.item-wrapper.deleted .price,
-.item-wrapper.deleted .amount,
-.item-wrapper.deleted .name {
-  text-decoration: line-through;
-}
-
-.item-wrapper.deleted .value:before {
-  content: "-";
-}
-
-.item-wrapper .payment .value {
-  font-weight: bold;
-  font-size: 1.4em;
-}
-
-.item-wrapper .payment .small-total {
-  display: flex;
-  flex-direction: column-reverse;
+  overflow: auto;
 }
 
 .current-shopping-details .bottom {
@@ -212,8 +221,8 @@ module.exports = {
 
 .current-shopping-details .bottom .value {
   position: absolute;
-  bottom:10px;
-  right:10px;
+  bottom: 10px;
+  right: 10px;
 }
 
 .current-shopping-details .bottom .billing-total-amount {
@@ -221,7 +230,8 @@ module.exports = {
 }
 
 .current-shopping-details .bottom .billing-total-amount .value {
-  font-size: 1.3em;
+  font-size: 2em;
+  font-weight: bold;
 }
 
 .catalog {
@@ -236,6 +246,7 @@ module.exports = {
   display: flex;
   flex-direction: row;
   height: 50%;
+  white-space: pre-line
 }
 
 .keypad {

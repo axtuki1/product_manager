@@ -71,6 +71,7 @@ module.exports = {
     },
   },
   mounted() {
+    this.$i18n.locale = 'ja';
     const v = this;
     // 全体で用がありそうな変数とかメソッド
     Vue.prototype.$APPDATA.util_methods = {

@@ -17,6 +17,12 @@
         />
         <i class="fas fa-search search-icon" v-on:click="search"></i>
       </div>
+      <button
+        v-on:click="reload"
+        class="btn refresh"
+      >
+        <i class="fas fa-sync-alt"></i> 再読込
+      </button>
     </div>
     <div class="item-list" v-show="!loading && itemList.length != 0">
       <product-item
@@ -127,6 +133,17 @@ module.exports = {
   cursor: pointer;
   transition: all ease 100ms;
   color: rgb(71, 71, 71);
+}
+
+.refresh {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  height: 35px;
+}
+
+.refresh i {
+  margin-right: 5px;
 }
 
 .search-query-input-wrapper .search-icon:hover {
