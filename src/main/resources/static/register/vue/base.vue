@@ -4,7 +4,7 @@
     <div class="left">
       <div class="current-shopping-details">
         <div class="registed-history">
-          <item-wrapper v-for="item in items" :key="item.id" :item="item">
+          <item-wrapper v-for="item in items" :key="item.id" :item="item" v-on:cancel="itemDelete">
             {{ item }}
           </item-wrapper>
           <!-- <div class="item-wrapper deleted">
@@ -23,29 +23,37 @@
         <div class="bottom">
           <div class="total-count">
             <div class="label">{{ $t("totalCount.label") }}</div>
-            <div class="value">{{ $t("totalCount.value", [numberFormat(totalCount)]) }}</div>
+            <div class="value">
+              {{ $t("totalCount.value", [numberFormat(totalCount)]) }}
+            </div>
           </div>
           <div class="billing-amount">
             <div class="label">{{ $t("smallTotal.label") }}</div>
-            <div class="value">{{ $t("smallTotal.value", [numberFormat(smallTotal)]) }}</div>
+            <div class="value">
+              {{ $t("smallTotal.value", [numberFormat(smallTotal)]) }}
+            </div>
           </div>
           <div class="discount-amount">
             <div class="label">{{ $t("discount.label") }}</div>
-            <div class="value">{{ $t("discount.value", [numberFormat(discount)]) }}</div>
+            <div class="value">
+              {{ $t("discount.value", [numberFormat(discount)]) }}
+            </div>
           </div>
           <div class="billing-total-amount">
             <div class="label">{{ $t("total.label") }}</div>
-            <div class="value">{{ $t("total.value", [numberFormat(total)]) }}</div>
+            <div class="value">
+              {{ $t("total.value", [numberFormat(total)]) }}
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="right">
       <div class="catalog">catalog</div>
+      <div class="">
+        <button class="" v-on:click="allClear">AC</button>
+      </div>
       <div class="controls">
-        <div>
-          
-        </div>
         <div class="keypad">
           <div class="top">
             <button>7</button>
@@ -78,16 +86,22 @@
 </template>
 
 <script>
+const KEYPAD_MODE = {
+  BARCODE: 0,
+  PRICE: 1,
+};
+
 module.exports = {
   data() {
     return {
       items: [],
-      inputMode: 0,
-      currentInputData: "",
+      currentItemId: 0,
       totalCount: 0,
       total: 0,
       smallTotal: 0,
       discount: 0,
+      currentKeyPadMode: KEYPAD_MODE.BARCODE,
+      currentKeyPadText: "",
     };
   },
   methods: {
@@ -96,33 +110,107 @@ module.exports = {
         .toString()
         .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
     },
-    recalc(){
-      for(let i = 0; i < this.items.length;i++){
+    recalc() {
+      this.totalCount = 0;
+      this.smallTotal = 0;
+      this.discount = 0;
+      this.total = 0;
+      for (let i = 0; i < this.items.length; i++) {
         const item = this.items[i];
-        this.totalCount += item.amount;
-        this.smallTotal += item.price * item.amount;
+        if(item.type == "delete"){
+          this.totalCount -= item.amount;
+          this.smallTotal -= item.price * item.amount;
+        } else {
+          this.totalCount += item.amount;
+          this.smallTotal += item.price * item.amount;
+        }
       }
       this.total = this.smallTotal - this.discount;
-    }
+    },
+    allClear() {
+      this.items = [];
+      this.recalc();
+    },
+    historyLastScroll(){
+      const el = this.$el.querySelector(".registed-history")
+      el.scrollTo(0, el.scrollHeight);
+    },
+    itemAdd(data){
+      data.id = this.currentItemId;
+      this.items.push(data);
+      this.currentItemId++;
+      setTimeout(this.historyLastScroll, 5);
+      this.recalc();
+    },
+    itemDelete(id){
+      const data = { ...this.items[id] }
+      data.id = this.currentItemId;
+      data.type = "delete";
+      this.items.push(data);
+      this.currentItemId++;
+      setTimeout(this.historyLastScroll, 5);
+      this.recalc();
+    },
+    windowKeyInput(event) {
+      if (event.key == "Enter") {
+        switch (this.currentKeyPadMode) {
+          case KEYPAD_MODE.BARCODE:
+            this.barcodeSearch(this.currentKeyPadText);
+            break;
+        }
+        this.currentKeyPadText = "";
+      } else if (!isNaN(event.key.slice(-1))) {
+        this.currentKeyPadText += event.key.slice(-1);
+      }
+    },
+    barcodeSearch(barcode) {
+      if(barcode == "") return;
+      fetch("/api/v1/item/code/"+barcode, {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((d) => d.json())
+        .then((j) => {
+          if(j.data.itemData.length == 0){
+            this.$APPDATA.util_methods.callNotice(
+              "コード["+barcode+"]はデータベースにありません",
+              3
+            );
+            return;
+          }
+          for(let i = 0; i < j.data.itemData.length; i++){
+            const data = j.data.itemData[i];
+            this.itemAdd({
+              name: data.name,
+              type: "register",
+              amount: 1,
+              price: data.price
+            });
+          }
+          this.recalc();
+        });
+    },
   },
   i18n: {
     messages: {
       ja: {
         totalCount: {
           label: "個数",
-          value: "{0}個"
+          value: "{0}個",
         },
         total: {
           label: "合計",
-          value: "{0}円"
+          value: "{0}円",
         },
         smallTotal: {
           label: "小計",
-          value: "{0}円"
+          value: "{0}円",
         },
         discount: {
           label: "割引",
-          value: "{0}円"
+          value: "{0}円",
         },
         button: {
           changeInput: {
@@ -137,36 +225,12 @@ module.exports = {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
     "item-wrapper": httpVueLoader("/register/vue/component/item-wrapper.vue"),
   },
+  beforeDestroy() {
+    document.removeEventListener("keydown", this.windowKeyInput);
+  },
   mounted() {
+    document.addEventListener("keydown", this.windowKeyInput);
     window.v = this;
-    this.items.push({
-      id: 1,
-      name: "名前",
-      type: "register",
-      amount: 10,
-      price: 10,
-    });
-    this.items.push({
-      id: 2,
-      name: "名前",
-      type: "register",
-      amount: 150,
-      price: 105,
-    });
-    this.items.push({
-      id: 3,
-      name: "名前",
-      type: "register",
-      amount: 1042,
-      price: 120,
-    });
-    this.items.push({
-      id: 4,
-      name: "名前",
-      type: "register",
-      amount: 1,
-      price: 10136,
-    });
     this.recalc();
   },
 };
@@ -208,7 +272,7 @@ module.exports = {
 }
 
 .current-shopping-details .bottom {
-  height: 210px;
+  min-height: 210px;
   display: flex;
   flex-direction: column;
 }
@@ -226,7 +290,7 @@ module.exports = {
 }
 
 .current-shopping-details .bottom .billing-total-amount {
-  flex-grow: 1.5;
+  height: 100%;
 }
 
 .current-shopping-details .bottom .billing-total-amount .value {
@@ -246,7 +310,7 @@ module.exports = {
   display: flex;
   flex-direction: row;
   height: 50%;
-  white-space: pre-line
+  white-space: pre-line;
 }
 
 .keypad {
@@ -270,23 +334,23 @@ module.exports = {
   width: 100%;
 }
 
-.controls button {
+button {
   border: 2px solid rgb(255, 180, 68);
   border-radius: 10px;
   background: rgb(255, 250, 183);
   text-align: center;
   font-size: 1.5em;
-  width: 100%;
-  height: 100%;
   flex-grow: 1;
+  width: 100%;
+  padding: 10px 10px;
 }
 
-.controls button:hover {
+button:hover {
   border: 2px solid rgb(255, 197, 110);
   background: rgb(255, 252, 206);
 }
 
-.controls button:active {
+button:active {
   border: 2px solid rgb(228, 161, 62);
   background: rgb(238, 233, 140);
 }

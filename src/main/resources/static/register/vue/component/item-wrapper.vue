@@ -14,12 +14,18 @@
         <div class="label">{{ $t("smallTotal.label") }}</div>
       </div>
     </div>
+    <button v-if="item.type != 'delete' && !isDeleted" class="cancelBtn btn" v-on:click="cancelBtn">取消</button>
   </div>
 </template>
 
 <script>
 module.exports = {
   props: ["item"],
+  data(){
+    return {
+      isDeleted: false
+    }
+  },
   i18n: {
     locale: i18n.locale,
     messages: {
@@ -43,6 +49,10 @@ module.exports = {
         .toString()
         .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
     },
+    cancelBtn(){
+      this.isDeleted = true;
+      this.$emit("cancel", this.item.id);
+    }
   },
   mounted() {},
 };

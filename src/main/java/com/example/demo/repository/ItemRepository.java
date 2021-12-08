@@ -14,4 +14,6 @@ public interface ItemRepository extends JpaRepository<Item,Integer>, JpaSpecific
 
 	List<Item> findByNameLike(String query);
 //    List<Item> findAllSort(int offset, int limit, String sort);
+
+	List<Item> findByCode(String code);
 }

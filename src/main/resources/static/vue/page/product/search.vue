@@ -13,15 +13,13 @@
           v-model="searchQuery"
           class="search-query-input"
           placeholder="検索..."
-          v-on:keyup.enter="search"
+          v-on:keyup="search($event)"
         />
         <i class="fas fa-search search-icon" v-on:click="search"></i>
       </div>
-      <button
-        v-on:click="reload"
-        class="btn refresh"
-      >
-        <i class="fas fa-sync-alt"></i> 再読込
+      <button v-on:click="reload" class="btn refresh">
+        <span v-if="!loading"><i class="fas fa-sync-alt"></i> 再読込</span>
+        <span v-else><i class="fas fa-sync-alt fa-spin"></i> 読込中</span>
       </button>
     </div>
     <div class="item-list" v-show="!loading && itemList.length != 0">
@@ -39,7 +37,9 @@
     </div>
     <div class="nope" v-show="!loading && itemList.length == 0">
       <i class="fas fa-question-circle"></i>
-      <div style="font-weight: bold;">入力された文字を含む商品は見つかりませんでした。</div>
+      <div style="font-weight: bold">
+        入力された文字を含む商品は見つかりませんでした。
+      </div>
     </div>
   </div>
 </template>
@@ -61,10 +61,10 @@ module.exports = {
   },
   methods: {
     reload() {
-      if(this.searchQuery != ""){
+      if (this.searchQuery != "") {
         this.search();
         return;
-      } 
+      }
       this.loading = true;
       fetch("/api/v1/items", {
         method: "GET",
@@ -78,12 +78,32 @@ module.exports = {
           this.loading = false;
         });
     },
-    search() {
+    search(e) {
+      // 関係ないキーでの検索を防止
+      if (
+        e == null ||
+        e.isComposing ||
+        (e.code != null && !(
+          e.code.substring(0, 3) == "Key" ||
+          e.code == "Enter" ||
+          e.code == "NumpadEnter" ||
+          e.key == "Backspace" ||
+          e.key == "Delete"
+        ))
+      ){
+        return;
+      }
+      
+      // 表示の切替
       this.loading = true;
+
+      // パラメーターの設定
       const params = {
-          q: this.searchQuery
+        q: this.searchQuery,
       };
-      fetch("/api/v1/search?"+new URLSearchParams(params), {
+
+      // 商品一覧の取得～条件を添えて～
+      fetch("/api/v1/search?" + new URLSearchParams(params), {
         method: "GET",
         headers: new Headers({
           "content-type": "application/json",
@@ -114,8 +134,7 @@ module.exports = {
 </script>
 
 <style scoped>
-
-.search-query-input-wrapper{
+.search-query-input-wrapper {
   position: relative;
   display: inline-block;
   width: 70%;

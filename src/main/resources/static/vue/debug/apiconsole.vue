@@ -1,5 +1,6 @@
 <template>
-  <div class="api-console-wrapper">
+  <div class="api-console-wrapper"
+        v-on:mousemove.stop.prevent="move($event)">
     <div
       class="api-console"
       v-bind:class="{ show: isOpen, grab: isGrabbing }"
@@ -8,7 +9,6 @@
       <div
         class="header"
         v-on:mousedown.stop.prevent="grab($event)"
-        v-on:mousemove.stop.prevent="move($event)"
         v-on:mouseup.stop.prevent="release($event)"
         v-on:mouseleave.stop.prevent="release($event)"
       >
@@ -60,6 +60,10 @@ module.exports = {
         x: 0,
         y: 0,
       },
+      basePos: {
+        x: 0,
+        y: 0
+      }
     };
   },
   mounted() {
@@ -92,11 +96,15 @@ module.exports = {
     },
     grab(e) {
       this.isGrabbing = true;
+      this.basePos.x = e.screenX;
+      this.basePos.y = e.screenY;
     },
     move(e) {
       if (this.isGrabbing) {
-        this.pos.x += e.movementX;
-        this.pos.y += e.movementY;
+        this.pos.x += e.screenX - this.basePos.x;
+        this.pos.y += e.screenY - this.basePos.y;
+        this.basePos.x = e.screenX;
+        this.basePos.y = e.screenY;
       }
     },
     release(e) {
