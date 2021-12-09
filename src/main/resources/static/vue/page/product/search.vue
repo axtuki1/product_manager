@@ -17,7 +17,7 @@
         />
         <i class="fas fa-search search-icon" v-on:click="search"></i>
       </div>
-      <input type="checkbox" v-model="enableRealTimeSearch" name="" id="" />
+      <!-- <input type="checkbox" v-model="enableRealTimeSearch" name="" id="" /> -->
       <button v-on:click="reload" class="btn refresh">
         <span v-if="!loading"><i class="fas fa-sync-alt"></i> 再読込</span>
         <span v-else><i class="fas fa-sync-alt fa-spin"></i> 読込中</span>
