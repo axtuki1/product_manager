@@ -1,134 +1,19 @@
 
 <template>
-  <div class="base">
-    <div class="left">
-      <div class="current-shopping-details">
-        <div class="registed-history">
-          <item-wrapper
-            v-for="item in items"
-            :key="item.id"
-            :item="item"
-            v-on:cancel="itemDelete"
-          >
-            {{ item }}
-          </item-wrapper>
-          <!-- <div class="item-wrapper deleted">
-            <div class="name">商品名商品名商品名</div>
-            <div class="type">登録</div>
-            <div class="payment">
-              <div class="amount">3個</div>
-              <div class="price">@500円</div>
-              <div class="small-total">
-                <div class="value">500円</div>
-                <div class="label">小　計</div>
-              </div>
-            </div>
-          </div> -->
-        </div>
-        <div class="bottom">
-          <div class="total-count">
-            <div class="label">{{ $t("totalCount.label") }}</div>
-            <div class="value">
-              {{ $t("totalCount.value", [numberFormat(totalCount)]) }}
-            </div>
-          </div>
-          <div class="billing-amount">
-            <div class="label">{{ $t("smallTotal.label") }}</div>
-            <div class="value">
-              {{ $t("smallTotal.value", [numberFormat(smallTotal)]) }}
-            </div>
-          </div>
-          <!-- <div class="discount-amount">
-            <div class="label">{{ $t("discount.label") }}</div>
-            <div class="value">
-              {{ $t("discount.value", [numberFormat(discount)]) }}
-            </div>
-          </div> -->
-          <div class="billing-total-amount">
-            <div class="label">{{ $t("total.label") }}</div>
-            <div class="value">
-              {{ $t("total.value", [numberFormat(total)]) }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="inputingData">
-        <div class="label">{{ $t("inputingData.label") }}</div>
-        <div class="value">
-          <current-keypad-item :item="keypadItem"></current-keypad-item>
-        </div>
-      </div>
-    </div>
-    <div class="right">
-      <div class="catalog">catalog</div>
-      <div class="">
-        <button class="" v-on:click="allClear">← ALLCLEAR</button>
-        <button class="" v-on:click="currentInputClear">Clear</button>
-        <button class="" v-on:click="sendingDetails">確　定</button>
-      </div>
-      <div class="controls">
-        <div class="keypad">
-          <div class="top">
-            <button v-on:click="KeyPadInput(7)">7</button>
-            <button v-on:click="KeyPadInput(8)">8</button>
-            <button v-on:click="KeyPadInput(9)">9</button>
-          </div>
-          <div class="middle">
-            <button v-on:click="KeyPadInput(4)">4</button>
-            <button v-on:click="KeyPadInput(5)">5</button>
-            <button v-on:click="KeyPadInput(6)">6</button>
-          </div>
-          <div class="bottom">
-            <button v-on:click="KeyPadInput(1)">1</button>
-            <button v-on:click="KeyPadInput(2)">2</button>
-            <button v-on:click="KeyPadInput(3)">3</button>
-          </div>
-          <div class="most-bottom">
-            <button v-on:click="KeyPadInput('00')">00</button>
-            <button v-on:click="KeyPadInput('0')">0</button>
-          </div>
-        </div>
-        <div class="actions">
-          <button v-bind:class="{primary: this.currentKeyPadMode == 0}" v-on:click="()=>{this.currentKeyPadMode = 0}" class="price">{{ $t("button.changeInput.price") }}</button>
-          <button v-bind:class="{primary: this.currentKeyPadMode == 1}" v-on:click="()=>{this.currentKeyPadMode = 1}" class="amount">{{ $t("button.changeInput.amount") }}</button>
-          <!-- <button v-bind:class="{primary: this.currentKeyPadMode == 2}" v-on:click="()=>{this.currentKeyPadMode = 2}" class="discount">{{ $t("button.changeInput.discount") }}</button> -->
-          <button v-on:click="inputDataRegister" class="register">{{ $t("button.changeInput.register") }}</button>
-        </div>
-      </div>
-    </div>
+  <div class="details">
+    
   </div>
 </template>
 
 <script>
-const KEYPAD_MODE = {
-  PRICE: 0,
-  AMOUNT: 1,
-  DISCOUNT: 2,
-};
 
 module.exports = {
+  props: ["items"],
   data() {
     return {
-      items: [],
-      keypadItem: {
-        price: 0,
-        amount: 0,
-      },
-      currentItemId: 0,
-      totalCount: 0,
-      total: 0,
-      smallTotal: 0,
-      discount: 0,
-      currentKeyPadMode: KEYPAD_MODE.AMOUNT,
-      currentKeyPadText: "",
-      currentKeyboardText: "",
     };
   },
   methods: {
-    sendingDetails(){
-      this.$emit("setItems", this.items);
-      this.$router.push("/register/details");
-    },
     currentInputClear() {
       this.currentKeyPadText = "";
       this.keypadItem = {

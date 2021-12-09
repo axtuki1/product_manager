@@ -7,7 +7,7 @@
         class="outline-content-wrapper"
         v-bind:class="{ loggined: $APPDATA.isLogin }"
       >
-        <router-view class="outline-content"></router-view>
+        <router-view class="outline-content" @setItems="setItems"></router-view>
       </div>
     </div>
     <div class="overlay-wrapper">
@@ -36,6 +36,7 @@ const router = new VueRouter({
   relative: true,
   routes: [
     { path: "/register", component: httpVueLoader("/register/vue/base.vue") },
+    { path: "/register/details", component: httpVueLoader("/register/vue/details.vue") },
     { path: "*", component: httpVueLoader("/vue/notfound.vue") },
   ],
 });
@@ -53,6 +54,7 @@ module.exports = {
       modalCount: 0,
       notices: [],
       noticeCount: 0,
+      items: []
     };
   },
   router: router,
@@ -69,6 +71,9 @@ module.exports = {
     closeNotice(id) {
       this.notices = this.notices.filter((item) => item.id != id);
     },
+    setItems(items){
+      this.items = items;
+    }
   },
   mounted() {
     this.$i18n.locale = 'ja';
