@@ -17,6 +17,7 @@
         />
         <i class="fas fa-search search-icon" v-on:click="search"></i>
       </div>
+      <input type="checkbox" v-model="enableRealTimeSearch" name="" id="" />
       <button v-on:click="reload" class="btn refresh">
         <span v-if="!loading"><i class="fas fa-sync-alt"></i> 再読込</span>
         <span v-else><i class="fas fa-sync-alt fa-spin"></i> 読込中</span>
@@ -49,8 +50,10 @@ module.exports = {
   data: function () {
     return {
       loading: true,
+      enableRealTimeSearch: false,
       nextloading: false,
       searchQuery: "",
+      beforeQuery: "",
       itemList: {},
       genreList: {},
     };
@@ -62,6 +65,7 @@ module.exports = {
   methods: {
     reload() {
       if (this.searchQuery != "") {
+        this.beforeQuery = "";
         this.search();
         return;
       }
@@ -80,20 +84,31 @@ module.exports = {
     },
     search(e) {
       // 関係ないキーでの検索を防止
-      if (
-        e == null ||
-        e.isComposing ||
-        (e.code != null && !(
-          e.code.substring(0, 3) == "Key" ||
-          e.code == "Enter" ||
-          e.code == "NumpadEnter" ||
-          e.key == "Backspace" ||
-          e.key == "Delete"
-        ))
-      ){
+      console.log(this.enableRealTimeSearch);
+      if (this.enableRealTimeSearch) {
+        // 重複する検索はやめよう！
+        if (this.beforeQuery == this.searchQuery) {
+          return;
+        }
+        if (
+          e == null ||
+          e.isComposing ||
+          (e.code != null &&
+            !(
+              e.code.substring(0, 3) == "Key" ||
+              e.code == "Enter" ||
+              e.code == "NumpadEnter" ||
+              e.key == "Backspace" ||
+              e.key == "Delete"
+            ))
+        ) {
+          return;
+        }
+      } else if (e != null && e.code != "Enter") {
+        console.log(e);
         return;
       }
-      
+      this.beforeQuery = this.searchQuery;
       // 表示の切替
       this.loading = true;
 
