@@ -1,7 +1,14 @@
 
 <template>
   <div class="details">
-    
+    <item-wrapper
+            v-for="item in items"
+            :key="item.id"
+            :item="item"
+            v-on:cancel="itemDelete"
+          >
+            {{ item }}
+          </item-wrapper>
   </div>
 </template>
 
