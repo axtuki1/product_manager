@@ -119,15 +119,14 @@ module.exports = {
       total: 0,
       smallTotal: 0,
       discount: 0,
-      currentKeyPadMode: KEYPAD_MODE.AMOUNT,
+      currentKeyPadMode: KEYPAD_MODE.PRICE,
       currentKeyPadText: "",
       currentKeyboardText: "",
     };
   },
   methods: {
     sendingDetails(){
-      this.$emit("setItems", this.items);
-      this.$router.push("/register/details");
+      this.$emit("set-items", this.items);
     },
     currentInputClear() {
       this.currentKeyPadText = "";
@@ -154,7 +153,7 @@ module.exports = {
       this.itemAdd({
         name: "商品",
         price: this.keypadItem.price,
-        amount: this.keypadItem.amount,
+        amount: this.keypadItem.amount == 0 ? 1 : this.keypadItem.amount,
         type:"register"
       });
       this.currentInputClear();

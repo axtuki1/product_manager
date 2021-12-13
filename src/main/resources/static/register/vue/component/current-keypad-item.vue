@@ -1,7 +1,7 @@
 <template>
   <div class="item-wrapper">
     <div class="payment">
-      <div class="amount">{{ $t("amount", [numberFormat(item.amount)]) }}</div>
+      <div class="amount">{{ $t("amount", [numberFormat(item.amount == 0 ? 1 : item.amount)]) }}</div>
       <div class="price">{{ $t("price", [numberFormat(item.price)]) }}</div>
       <div class="small-total">
         <div class="value">{{ $t("smallTotal.value", [numberFormat(item.amount * item.price)]) }}</div>

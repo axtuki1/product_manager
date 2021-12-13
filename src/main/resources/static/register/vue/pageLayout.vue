@@ -7,7 +7,7 @@
         class="outline-content-wrapper"
         v-bind:class="{ loggined: $APPDATA.isLogin }"
       >
-        <router-view class="outline-content" @setItems="setItems"></router-view>
+        <router-view class="outline-content" @set-items="setItems" :items="items"></router-view>
       </div>
     </div>
     <div class="overlay-wrapper">
@@ -73,6 +73,7 @@ module.exports = {
     },
     setItems(items){
       this.items = items;
+      this.$router.push("/register/details");
     }
   },
   mounted() {

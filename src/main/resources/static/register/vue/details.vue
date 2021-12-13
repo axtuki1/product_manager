@@ -1,14 +1,7 @@
 
 <template>
   <div class="details">
-    <item-wrapper
-            v-for="item in items"
-            :key="item.id"
-            :item="item"
-            v-on:cancel="itemDelete"
-          >
-            {{ item }}
-          </item-wrapper>
+    <div></div>
   </div>
 </template>
 
@@ -21,121 +14,7 @@ module.exports = {
     };
   },
   methods: {
-    currentInputClear() {
-      this.currentKeyPadText = "";
-      this.keypadItem = {
-        price: 0,
-        amount: 0
-      }
-    },
-    KeyPadInput(text) {
-      // this.currentKeyPadText += text;
-      let value = 0;
-      switch(this.currentKeyPadMode){
-        case KEYPAD_MODE.PRICE:
-          value = this.keypadItem.price + "" + text;
-          this.keypadItem.price = Number.parseInt(value);
-          break;
-        case KEYPAD_MODE.AMOUNT:
-          value = this.keypadItem.amount + "" + text;
-          this.keypadItem.amount = Number.parseInt(value);
-          break;
-      }
-    },
-    inputDataRegister(){
-      this.itemAdd({
-        name: "商品",
-        price: this.keypadItem.price,
-        amount: this.keypadItem.amount,
-        type:"register"
-      });
-      this.currentInputClear();
-    },
-    numberFormat(num) {
-      return (num || 0)
-        .toString()
-        .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
-    },
-    recalc() {
-      this.totalCount = 0;
-      this.smallTotal = 0;
-      this.discount = 0;
-      this.total = 0;
-      for (let i = 0; i < this.items.length; i++) {
-        const item = this.items[i];
-        if (item.type == "delete") {
-          this.totalCount -= item.amount;
-          this.smallTotal -= item.price * item.amount;
-        } else {
-          this.totalCount += item.amount;
-          this.smallTotal += item.price * item.amount;
-        }
-      }
-      this.total = this.smallTotal - this.discount;
-    },
-    allClear() {
-      this.items = [];
-      this.recalc();
-    },
-    historyLastScroll() {
-      const el = this.$el.querySelector(".registed-history");
-      el.scrollTo(0, el.scrollHeight);
-    },
-    itemAdd(data) {
-      data.id = this.currentItemId;
-      this.items.push(data);
-      this.currentItemId++;
-      setTimeout(this.historyLastScroll, 5);
-      this.recalc();
-    },
-    itemDelete(id) {
-      const data = { ...this.items[id] };
-      data.id = this.currentItemId;
-      data.type = "delete";
-      this.items.push(data);
-      this.currentItemId++;
-      setTimeout(this.historyLastScroll, 5);
-      this.recalc();
-    },
-    windowKeyInput(event) {
-      if (event.key == "Enter") {
-        this.barcodeSearch(this.currentKeyboardText);
-        this.currentKeyboardText = "";
-      } else if (!isNaN(event.key.slice(-1))) {
-        this.currentKeyboardText += event.key.slice(-1);
-      } else if (event.key == "Backspace") {
-        this.currentKeyboardText = this.currentKeyboardText.slice(0, -1);
-      }
-    },
-    barcodeSearch(barcode) {
-      if (barcode == "") return;
-      fetch("/api/v1/item/code/" + barcode, {
-        method: "GET",
-        headers: new Headers({
-          "content-type": "application/json",
-        }),
-      })
-        .then((d) => d.json())
-        .then((j) => {
-          if (j.data.itemData.length == 0) {
-            this.$APPDATA.util_methods.callNotice(
-              "コード[" + barcode + "]はデータベースにありません",
-              3
-            );
-            return;
-          }
-          for (let i = 0; i < j.data.itemData.length; i++) {
-            const data = j.data.itemData[i];
-            this.itemAdd({
-              name: data.name,
-              type: "register",
-              amount: 1,
-              price: data.price,
-            });
-          }
-          this.recalc();
-        });
-    },
+
   },
   i18n: {
     messages: {
@@ -178,12 +57,13 @@ module.exports = {
     "current-keypad-item": httpVueLoader("/register/vue/component/current-keypad-item.vue")
   },
   beforeDestroy() {
-    document.removeEventListener("keydown", this.windowKeyInput);
+    
   },
   mounted() {
-    document.addEventListener("keydown", this.windowKeyInput);
-    window.v = this;
-    this.recalc();
+    console.log(this.items);
+    if( this.items == null || this.items.length == 0 ){
+      this.$router.push("/register");
+    }
   },
 };
 </script>
