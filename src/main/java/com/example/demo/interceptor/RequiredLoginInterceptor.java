@@ -41,6 +41,7 @@ public class RequiredLoginInterceptor {
 			try {
 				data = pjp.proceed();
 			} catch ( Exception e ) {
+				e.printStackTrace();
 				isOK = false;
 			}
 		}
@@ -59,6 +60,7 @@ public class RequiredLoginInterceptor {
 //		if(status == HttpStatus.OK) 
 			return out;
 		// *痛み*
+		// ResponseEntityを返せばSpring君がよしなにやってくれるんじゃと思ったけど甘かった。
 //		return new ResponseEntity<HashMap<String, Object>>(out, headers, status);
 	}
 }

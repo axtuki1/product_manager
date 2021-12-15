@@ -188,6 +188,11 @@ module.exports = {
 </script>
 
 <style scoped>
+
+* {
+  box-sizing: border-box;
+}
+
 .page,
 .page-view,
 .outline-content-wrapper,

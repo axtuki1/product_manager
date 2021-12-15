@@ -3,7 +3,7 @@
 <template>
   <div class="item-wrapper" v-bind:class="{ deleted: item.type == 'delete' }">
     <div class="name">{{ item.name }}</div>
-    <div class="type">{{ $t("type." + item.type, [item.type]) }}</div>
+    <div class="type" v-if="!is_details">{{ $t("type." + item.type, [item.type]) }}</div>
     <div class="payment">
       <div class="amount">{{ $t("amount", [numberFormat(item.amount)]) }}</div>
       <div class="price">{{ $t("price", [numberFormat(item.price)]) }}</div>
@@ -12,13 +12,13 @@
         <div class="label">{{ $t("smallTotal.label") }}</div>
       </div>
     </div>
-    <button v-if="item.type != 'delete' && !isDeleted" class="cancelBtn btn" v-on:click="cancelBtn">取消</button>
+    <button v-if="item.type != 'delete' && !isDeleted && !is_details" class="cancelBtn btn" v-on:click="cancelBtn">取消</button>
   </div>
 </template>
 
 <script>
 module.exports = {
-  props: ["item"],
+  props: ["item","is_details"],
   data(){
     return {
       isDeleted: false

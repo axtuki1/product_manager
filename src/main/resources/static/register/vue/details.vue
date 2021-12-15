@@ -1,21 +1,29 @@
 
 <template>
   <div class="details">
-    <div></div>
+    <div class="item-history">
+      <item-wrapper
+        v-for="item in items"
+        :key="item.id"
+        :item="item"
+        :is_details="true"
+      >
+        {{ item }}
+      </item-wrapper>
+    </div>
   </div>
 </template>
 
 <script>
-
 module.exports = {
   props: ["items"],
   data() {
     return {
+      paymentAmount: 0,
+      paymentMethod: "",
     };
   },
-  methods: {
-
-  },
+  methods: {},
   i18n: {
     messages: {
       ja: {
@@ -45,23 +53,23 @@ module.exports = {
             register: "登録",
           },
         },
-        inputingData:{
-          label: "次の商品に付加 or 登録 >>"
-        }
+        inputingData: {
+          label: "次の商品に付加 or 登録 >>",
+        },
       },
     },
   },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
     "item-wrapper": httpVueLoader("/register/vue/component/item-wrapper.vue"),
-    "current-keypad-item": httpVueLoader("/register/vue/component/current-keypad-item.vue")
+    "current-keypad-item": httpVueLoader(
+      "/register/vue/component/current-keypad-item.vue"
+    ),
   },
-  beforeDestroy() {
-    
-  },
+  beforeDestroy() {},
   mounted() {
     console.log(this.items);
-    if( this.items == null || this.items.length == 0 ){
+    if (this.items == null || this.items.length == 0) {
       this.$router.push("/register");
     }
   },
@@ -206,7 +214,6 @@ button:active {
   border: 2px solid rgb(228, 161, 62);
   background: rgb(238, 233, 140);
 }
-
 
 button.primary {
   border: 2px solid rgb(255, 68, 215);

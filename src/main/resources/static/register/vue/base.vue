@@ -9,6 +9,7 @@
             :key="item.id"
             :item="item"
             v-on:cancel="itemDelete"
+            :is_details="false"
           >
             {{ item }}
           </item-wrapper>
@@ -60,11 +61,39 @@
       </div>
     </div>
     <div class="right">
-      <div class="catalog">catalog</div>
-      <div class="">
-        <button class="" v-on:click="allClear">← ALLCLEAR</button>
-        <button class="" v-on:click="currentInputClear">Clear</button>
+      <div class="catalog" v-if="!isDetails">catalog</div>
+      <div v-if="isDetails" class="details">
+        <div class="billing-total-amount">
+          <div class="label">{{ $t("total.label") }}</div>
+          <div class="value">
+            {{ $t("total.value", [numberFormat(total)]) }}
+          </div>
+        </div>
+        <div class="payment-total-amount">
+          <div class="label">{{ $t("payment.label") }}</div>
+          <div class="value">
+            {{ $t("payment.value", [numberFormat(payment_amount)]) }}
+          </div>
+        </div>
+        <div class="return-total-amount">
+          <div class="label">{{ $t("return.label") }}</div>
+          <div class="value">
+            {{ $t("return.value", [numberFormat(payment_amount - total)]) }}
+          </div>
+        </div>
+      </div>
+      <div class="register-mode-buttons" v-if="!isDetails">
+        <button class="" v-on:click="allClear">履歴の削除</button>
+        <button class="" v-on:click="currentInputClear">
+          価格/個数入力の削除
+        </button>
         <button class="" v-on:click="sendingDetails">確　定</button>
+      </div>
+      <div class="register-mode-buttons" v-if="isDetails">
+        <button class="" v-on:click="currentInputClear">
+          支払い金額の削除
+        </button>
+        <button class="" v-on:click="inputDataRegister">会　計</button>
       </div>
       <div class="controls">
         <div class="keypad">
@@ -89,10 +118,36 @@
           </div>
         </div>
         <div class="actions">
-          <button v-bind:class="{primary: this.currentKeyPadMode == 0}" v-on:click="()=>{this.currentKeyPadMode = 0}" class="price">{{ $t("button.changeInput.price") }}</button>
-          <button v-bind:class="{primary: this.currentKeyPadMode == 1}" v-on:click="()=>{this.currentKeyPadMode = 1}" class="amount">{{ $t("button.changeInput.amount") }}</button>
+          <button
+            v-bind:class="{
+              primary: this.currentKeyPadMode == 0 && !isDetails,
+            }"
+            v-on:click="
+              () => {
+                this.currentKeyPadMode = 0;
+              }
+            "
+            class="price"
+          >
+            {{ $t("button.changeInput.price") }}
+          </button>
+          <button
+            v-bind:class="{
+              primary: this.currentKeyPadMode == 1 && !isDetails,
+            }"
+            v-on:click="
+              () => {
+                this.currentKeyPadMode = 1;
+              }
+            "
+            class="amount"
+          >
+            {{ $t("button.changeInput.amount") }}
+          </button>
           <!-- <button v-bind:class="{primary: this.currentKeyPadMode == 2}" v-on:click="()=>{this.currentKeyPadMode = 2}" class="discount">{{ $t("button.changeInput.discount") }}</button> -->
-          <button v-on:click="inputDataRegister" class="register">{{ $t("button.changeInput.register") }}</button>
+          <button v-on:click="inputDataRegister" class="register">
+            {{ $t("button.changeInput.register") }}
+          </button>
         </div>
       </div>
     </div>
@@ -122,46 +177,76 @@ module.exports = {
       currentKeyPadMode: KEYPAD_MODE.PRICE,
       currentKeyPadText: "",
       currentKeyboardText: "",
+      isDetails: false,
+      payment_amount: 0,
     };
   },
   methods: {
-    sendingDetails(){
-      this.$emit("set-items", this.items);
+    sendingDetails() {
+      this.isDetails = true;
     },
     currentInputClear() {
+      this.payment_amount = 0;
       this.currentKeyPadText = "";
       this.keypadItem = {
         price: 0,
-        amount: 0
-      }
+        amount: 0,
+      };
     },
     KeyPadInput(text) {
       // this.currentKeyPadText += text;
       let value = 0;
-      switch(this.currentKeyPadMode){
-        case KEYPAD_MODE.PRICE:
-          value = this.keypadItem.price + "" + text;
-          this.keypadItem.price = Number.parseInt(value);
-          break;
-        case KEYPAD_MODE.AMOUNT:
-          value = this.keypadItem.amount + "" + text;
-          this.keypadItem.amount = Number.parseInt(value);
-          break;
+      if (this.isDetails) {
+        value = this.payment_amount + "" + text;
+        this.payment_amount = Number.parseInt(value);
+      } else {
+        switch (this.currentKeyPadMode) {
+          case KEYPAD_MODE.PRICE:
+            value = this.keypadItem.price + "" + text;
+            this.keypadItem.price = Number.parseInt(value);
+            break;
+          case KEYPAD_MODE.AMOUNT:
+            value = this.keypadItem.amount + "" + text;
+            this.keypadItem.amount = Number.parseInt(value);
+            break;
+        }
       }
     },
-    inputDataRegister(){
-      this.itemAdd({
-        name: "商品",
-        price: this.keypadItem.price,
-        amount: this.keypadItem.amount == 0 ? 1 : this.keypadItem.amount,
-        type:"register"
-      });
-      this.currentInputClear();
+    inputDataRegister() {
+      if (this.isDetails) {
+        this.sendRegisterData();
+      } else {
+        this.itemAdd({
+          name: "商品",
+          price: this.keypadItem.price,
+          amount: this.keypadItem.amount == 0 ? 1 : this.keypadItem.amount,
+          type: "register",
+        });
+        this.currentInputClear();
+      }
     },
     numberFormat(num) {
       return (num || 0)
         .toString()
         .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
+    },
+    sendRegisterData(){
+      fetch("/api/v1/register", {
+        method:"POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify({
+          items: this.items,
+          total: this.total,
+          payment: this.payment_amount,
+          
+        })
+      }).then((d)=>d.json()).then((json)=>{
+
+      });
+  
     },
     recalc() {
       this.totalCount = 0;
@@ -263,6 +348,14 @@ module.exports = {
           label: "割引",
           value: "{0}円",
         },
+        payment: {
+          label: "支払",
+          value: "{0}円",
+        },
+        return: {
+          label: "釣銭",
+          value: "{0}円",
+        },
         button: {
           changeInput: {
             price: "価格",
@@ -273,16 +366,18 @@ module.exports = {
             register: "登録",
           },
         },
-        inputingData:{
-          label: "次の商品に付加 or 登録 >>"
-        }
+        inputingData: {
+          label: "次の商品に付加 or 登録 >>",
+        },
       },
     },
   },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
     "item-wrapper": httpVueLoader("/register/vue/component/item-wrapper.vue"),
-    "current-keypad-item": httpVueLoader("/register/vue/component/current-keypad-item.vue")
+    "current-keypad-item": httpVueLoader(
+      "/register/vue/component/current-keypad-item.vue"
+    ),
   },
   beforeDestroy() {
     document.removeEventListener("keydown", this.windowKeyInput);
@@ -334,34 +429,47 @@ module.exports = {
   overflow: auto;
 }
 
-.current-shopping-details .bottom {
+.current-shopping-details .bottom,
+.details {
   min-height: 210px;
   display: flex;
   flex-direction: column;
 }
 
-.current-shopping-details .bottom > * {
+.current-shopping-details .bottom > *,
+.details > * {
   position: relative;
   padding: 10px;
   border-top: 1px solid #000;
 }
 
-.current-shopping-details .bottom .value {
+.details > * {
+  height: 100%;
+}
+
+.details > *:first-child {
+  border-top: none;
+}
+
+.current-shopping-details .bottom .value,
+.details .value {
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
 
-.current-shopping-details .bottom .billing-total-amount {
+.current-shopping-details .billing-total-amount {
   height: 100%;
 }
 
-.current-shopping-details .bottom .billing-total-amount .value {
+.current-shopping-details .billing-total-amount .value,
+.details .value {
   font-size: 2em;
   font-weight: bold;
 }
 
-.catalog {
+.catalog,
+.details {
   height: 47.5%;
   border-radius: 10px;
   background: rgb(241, 241, 241);
@@ -433,7 +541,6 @@ button:active {
   border: 2px solid rgb(228, 161, 62);
   background: rgb(238, 233, 140);
 }
-
 
 button.primary {
   border: 2px solid rgb(255, 68, 215);
