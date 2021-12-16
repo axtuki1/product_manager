@@ -1,6 +1,7 @@
 
 <template>
   <div class="base">
+    <loading v-show="loading"></loading>
     <div class="left">
       <div class="current-shopping-details">
         <div class="registed-history">
@@ -179,6 +180,7 @@ module.exports = {
       currentKeyboardText: "",
       isDetails: false,
       payment_amount: 0,
+      loading: false,
     };
   },
   methods: {
@@ -218,6 +220,7 @@ module.exports = {
       } else {
         this.itemAdd({
           name: "商品",
+          itemId: null,
           price: this.keypadItem.price,
           amount: this.keypadItem.amount == 0 ? 1 : this.keypadItem.amount,
           type: "register",
@@ -231,6 +234,7 @@ module.exports = {
         .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
     },
     sendRegisterData(){
+      this.loading = true;
       fetch("/api/v1/register", {
         method:"POST",
         headers: {
@@ -244,7 +248,10 @@ module.exports = {
           
         })
       }).then((d)=>d.json()).then((json)=>{
-
+        this.loading = false;
+        this.$APPDATA.util_methods.callModal("登録しました。");
+        this.items = [];
+        this.isDetails = false;
       });
   
     },
@@ -320,6 +327,7 @@ module.exports = {
             const data = j.data.itemData[i];
             this.itemAdd({
               name: data.name,
+              itemId: data.id,
               type: "register",
               amount: 1,
               price: data.price,
@@ -374,6 +382,7 @@ module.exports = {
   },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
+    "loading": httpVueLoader("/vue/loading-overlay.vue"),
     "item-wrapper": httpVueLoader("/register/vue/component/item-wrapper.vue"),
     "current-keypad-item": httpVueLoader(
       "/register/vue/component/current-keypad-item.vue"

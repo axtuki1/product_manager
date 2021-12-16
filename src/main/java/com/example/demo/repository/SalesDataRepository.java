@@ -10,7 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.entity.Item;
 import com.example.demo.entity.ItemMovement;
+import com.example.demo.entity.SalesData;
 
-public interface ItemMovementRepository extends JpaRepository<ItemMovement,Integer>, JpaSpecificationExecutor<ItemMovement> {
+public interface SalesDataRepository extends JpaRepository<SalesData,Integer>, JpaSpecificationExecutor<SalesData> {
+
 //    List<Item> findAllSort(int offset, int limit, String sort);
+	
+	List<SalesData>findTopByOrderByIdDesc();
+	
 }

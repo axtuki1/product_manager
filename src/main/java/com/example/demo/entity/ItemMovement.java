@@ -14,22 +14,24 @@ public class ItemMovement {
 	@Column(name = "item_move_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
-	@Column(name = "item_taget_id")
-	public String targetId;
+	@Column(name = "item_target_id")
+	public Integer targetId;
 	@Column(name = "item_move_amount")
 	public Integer moveAmount;
 	@Column(name = "item_move_sale_code")
 	public Integer saleCode;
+	@Column(name = "item_price")
+	public Integer price;
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getTargetId() {
+	public Integer getTargetId() {
 		return targetId;
 	}
-	public void setTargetId(String targetId) {
+	public void setTargetId(Integer targetId) {
 		this.targetId = targetId;
 	}
 	public Integer getMoveAmount() {
@@ -44,5 +46,18 @@ public class ItemMovement {
 	public void setSaleCode(Integer saleCode) {
 		this.saleCode = saleCode;
 	}
-	
+	public Integer getPrice() {
+		return price;
+	}
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+	public static ItemMovement genData(int sale_code, int moveId,int moveAmount, int price) {
+		ItemMovement im = new ItemMovement();
+		im.setMoveAmount(moveAmount);
+		im.setTargetId(moveId==0?null:moveId);
+		im.setSaleCode(sale_code);
+		im.setPrice(price);
+		return im;
+	}
 }
