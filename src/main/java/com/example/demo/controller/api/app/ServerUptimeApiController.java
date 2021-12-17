@@ -26,7 +26,7 @@ import com.example.demo.form.RegisterForm;
 import com.example.demo.repository.ItemRepository;
 
 @Controller
-public class NullTestApiController {
+public class ServerUptimeApiController {
 
 	@Autowired
 	ItemRepository repository;
@@ -37,7 +37,7 @@ public class NullTestApiController {
 	 * @Endpoint /api/v1/register
 	 * @Method GET
 	 */
-	@RequestMapping(path = "/api/v1/null", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/v1/uptime", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public HashMap<String, Object> viewPage(Model model, HttpSession session) {

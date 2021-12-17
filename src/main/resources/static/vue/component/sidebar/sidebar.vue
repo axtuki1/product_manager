@@ -43,7 +43,7 @@ module.exports = {
         },
         {
           id: "analytics",
-          name: "販売分析",
+          name: "売上/販売分析",
           icon: '<i class="fas fa-chart-line fa-fw"></i>',
           func() {
             v.push("/analytics");
