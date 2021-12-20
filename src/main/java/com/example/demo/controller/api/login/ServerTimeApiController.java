@@ -1,4 +1,4 @@
-package com.example.demo.controller.api.app;
+package com.example.demo.controller.api.login;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,28 +20,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.Application;
 import com.example.demo.entity.Item;
 import com.example.demo.form.NewItemInsertForm;
 import com.example.demo.form.RegisterForm;
 import com.example.demo.repository.ItemRepository;
 
 @Controller
-public class ServerUptimeApiController {
+public class ServerTimeApiController {
 
 	@Autowired
 	ItemRepository repository;
 
 	/**
-	 * ぬるぽ！
+	 * サーバーの現在時刻
 	 * 
-	 * @Endpoint /api/v1/register
+	 * @Endpoint /api/v1/time
 	 * @Method GET
 	 */
-	@RequestMapping(path = "/api/v1/uptime", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/v1/time", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public HashMap<String, Object> viewPage(Model model, HttpSession session) {
-		return null;
+		return new HashMap<String, Object>(){{
+			put("Time", System.currentTimeMillis());
+		}};
 	}
 
 }

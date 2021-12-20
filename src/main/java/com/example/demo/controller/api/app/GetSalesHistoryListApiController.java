@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,23 +25,33 @@ import com.example.demo.entity.Item;
 import com.example.demo.form.NewItemInsertForm;
 import com.example.demo.form.RegisterForm;
 import com.example.demo.repository.ItemRepository;
+import com.example.demo.repository.SalesDataRepository;
 
 @Controller
-public class GetBuyListApiController {
+public class GetSalesHistoryListApiController {
 
 	@Autowired
-	ItemRepository repository;
+	SalesDataRepository sales_repo;
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	/**
-	 * ぬるぽ！
+	 * 販売履歴を返すAPI。
 	 * 
-	 * @Endpoint /api/v1/register
+	 * @Endpoint /api/v1/sales/history
 	 * @Method GET
 	 */
-	@RequestMapping(path = "/api/v1/buy", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/v1/sales/history", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public HashMap<String, Object> viewPage(Model model, HttpSession session) {
+		
+		
+		
+		
+		
+		
 		return null;
 	}
 
