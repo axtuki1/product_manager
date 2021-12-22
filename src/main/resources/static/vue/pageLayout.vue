@@ -202,10 +202,15 @@ module.exports = {
 
         return true;
       },
+      numberFormat(num) {
+        return (num || 0)
+          .toString()
+          .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
+      },
     };
 
     let isInit = false;
-    
+
     setTimeout(() => {
       this.$APPDATA.loginBeforeViewPage = this.$router.currentRoute.fullPath;
       let id = setInterval(() => {
@@ -243,12 +248,19 @@ module.exports = {
             this.$APPDATA.isLogin = true;
             this.$APPDATA.disconnectedDetected = false;
           } else {
-            if(isInit && this.$APPDATA.loginBeforeViewPage != "/login" && !this.$APPDATA.disconnectedDetected){
+            if (
+              isInit &&
+              this.$APPDATA.loginBeforeViewPage != "/login" &&
+              !this.$APPDATA.disconnectedDetected
+            ) {
               // 通常時にログインが死んでることに気が付いたら
-              this.$APPDATA.loginBeforeViewPage = this.$router.currentRoute.fullPath;
+              this.$APPDATA.loginBeforeViewPage =
+                this.$router.currentRoute.fullPath;
               this.$APPDATA.isLogin = false;
               this.$APPDATA.disconnectedDetected = true;
-              this.$APPDATA.util_methods.callModal("現在の接続が何らかの操作で切断されていました。\nお手数ですが再度ログインをお願いします。");
+              this.$APPDATA.util_methods.callModal(
+                "現在の接続が何らかの操作で切断されていました。\nお手数ですが再度ログインをお願いします。"
+              );
               this.$router.push("/login");
             }
           }
@@ -258,7 +270,7 @@ module.exports = {
     };
 
     setInterval(() => {
-      if(this.$APPDATA.isLogin) checkLogin();
+      if (this.$APPDATA.isLogin) checkLogin();
     }, 10 * 1000);
     checkLogin();
   },

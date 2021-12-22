@@ -56,6 +56,7 @@ header {
   position: relative;
   width: 100%;
   height: calc(100% - 50px);
+  overflow: auto;
 }
 
 .center-dialog {

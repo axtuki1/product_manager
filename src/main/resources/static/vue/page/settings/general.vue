@@ -1,6 +1,8 @@
 <template>
   <div class="settings">
-    設定。
+    <button class="btn danger" v-on:click="$APPDATA.util_methods.logout">
+      <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i> ログアウト
+    </button>
   </div>
 </template>
 

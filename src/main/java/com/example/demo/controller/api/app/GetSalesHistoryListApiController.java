@@ -1,5 +1,6 @@
 package com.example.demo.controller.api.app;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,13 +47,9 @@ public class GetSalesHistoryListApiController {
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public HashMap<String, Object> viewPage(Model model, HttpSession session) {
-		
-		
-		
-		
-		
-		
-		return null;
+		HashMap<String, Object> data = new HashMap<>();
+		data.put("sales_history", sales_repo.findAll());
+		return data;
 	}
 
 }
