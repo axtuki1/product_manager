@@ -5,6 +5,10 @@
     >
     <div class="name">{{ dateStr }}</div>
     <div class="infomation">
+      <div class="id">
+        <span class="key">id:</span>
+        <span class="value">{{ item.id }}</span>
+      </div>
       <div class="payment">
         <span class="key">請求:</span>
         <span class="value">{{ $APPDATA.util_methods.numberFormat(item.billingAmount) }}円</span>
@@ -13,7 +17,7 @@
         <span class="key">支払:</span>
         <span class="value">{{ $APPDATA.util_methods.numberFormat(item.paymentAmount) }}円</span>
       </div>
-      <div class="price">
+      <div class="price" v-if="item.paymentAmount - item.billingAmount != 0">
         <span class="key">差額:</span>
         <span class="value">{{ $APPDATA.util_methods.numberFormat(item.paymentAmount - item.billingAmount) }}円</span>
       </div>
@@ -43,7 +47,7 @@ module.exports = {
   },
   mounted() {
     const date = new Date(Date.parse(this.item.paymentTimestamp));
-    this.dateStr = date.getFullYear() + "年"+date.getMonth()+"月"+date.getDate()+"日 "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+    this.dateStr = date.getFullYear() + "年"+(date.getMonth()+1)+"月"+date.getDate()+"日 "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
   },
   methods: {
     push() {
@@ -55,7 +59,7 @@ module.exports = {
     removePush() {
       this.deleting = true;
       const deleteMethod = () => {
-        fetch("/api/v1/item/" + this.item.id, {
+        fetch("/api/v1/analytics/" + this.item.id, {
           method: "DELETE",
           headers: new Headers({
             "content-type": "application/json",
@@ -64,7 +68,7 @@ module.exports = {
           .then((res) => res.json())
           .then((j) => {
             this.deleting = false;
-            this.$APPDATA.util_methods.callNotice("商品を削除しました。", {
+            this.$APPDATA.util_methods.callNotice("売上情報を削除しました。", {
               sec: 3,
             });
             this.$emit("reload");

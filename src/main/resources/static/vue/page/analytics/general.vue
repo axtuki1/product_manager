@@ -4,15 +4,17 @@
       <div class="this-month-total-seles">
         <div class="label">
           今月の売上
-          <div class="upper-per"><span>伸び率</span>: <span>0.1%</span></div>
+          <div class="upper-per"><span>伸び率</span>: <span>{{ 
+              Math.floor((thisMonthSalesScore - lastMonthSalesScore) / lastMonthSalesScore * 10) / 10
+            }}%</span></div>
         </div>
-        <div class="value">1,100,000円</div>
+        <div class="value">{{ $APPDATA.util_methods.numberFormat(thisMonthSalesScore) }}円</div>
       </div>
       <div class="before-month-total-seles">
         <div class="label">
           先月の売上
         </div>
-        <div class="value">1,000,000円</div>
+        <div class="value">{{ $APPDATA.util_methods.numberFormat(lastMonthSalesScore) }}円</div>
       </div>
     </div>
     <div class="item-list" v-show="!loading && salesList.length != 0">
@@ -40,7 +42,9 @@ module.exports = {
   data: function () {
     return {
       loading: true,
-      salesList:[]
+      salesList:[],
+      thisMonthSalesScore: 0,
+      lastMonthSalesScore: 0
     };
   },
   components: {
@@ -49,6 +53,17 @@ module.exports = {
   },
   methods: {
     reload(){
+      fetch("/api/v1/sales", {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((d) => d.json())
+        .then((j) => {
+          this.thisMonthSalesScore = j.data.this_month_sales_score;
+          this.lastMonthSalesScore = j.data.last_month_sales_score;
+        });
       fetch("/api/v1/sales/history", {
         method: "GET",
         headers: new Headers({

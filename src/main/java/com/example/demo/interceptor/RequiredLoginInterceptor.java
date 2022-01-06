@@ -27,6 +27,10 @@ public class RequiredLoginInterceptor {
 	@Autowired
 	private HttpSession session;
 	
+	/**
+	 * api.appパッケージ内で動くControllerに対して割り込むInterceptor。
+	 * HTTP Statusをしっかり返したいけどなんか返してくれないから200 OK固定。つらい。
+	 */
 	@Around("execution(* com.example.demo.controller.api.app.*.*(..))")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable {
 		boolean isOK = true;
