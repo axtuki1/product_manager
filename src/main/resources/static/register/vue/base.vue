@@ -250,8 +250,9 @@ module.exports = {
       }).then((d)=>d.json()).then((json)=>{
         this.loading = false;
         this.$APPDATA.util_methods.callModal("登録しました。");
-        this.items = [];
         this.isDetails = false;
+        this.allClear();
+        this.currentInputClear();
       });
   
     },
@@ -483,7 +484,7 @@ module.exports = {
   border-radius: 10px;
   background: rgb(241, 241, 241);
   padding: 20px;
-  margin-bottom: 5%;
+  margin-bottom: 1.5em;
 }
 
 .register {
@@ -495,7 +496,7 @@ module.exports = {
   border-radius: 10px;
   background: rgb(241, 241, 241);
   padding: 20px;
-  margin-top: 5%;
+  margin-top: 1.5em;
 }
 
 .inputingData .value {

@@ -17,10 +17,6 @@
         <span class="key">支払:</span>
         <span class="value">{{ $APPDATA.util_methods.numberFormat(item.paymentAmount) }}円</span>
       </div>
-      <div class="price" v-if="item.paymentAmount - item.billingAmount != 0">
-        <span class="key">差額:</span>
-        <span class="value">{{ $APPDATA.util_methods.numberFormat(item.paymentAmount - item.billingAmount) }}円</span>
-      </div>
     </div>
     <div class="moderatorBtn">
       <button class="btn edit" v-on:click.stop.prevent="editPush">

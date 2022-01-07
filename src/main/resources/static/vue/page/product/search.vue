@@ -64,6 +64,7 @@ module.exports = {
   },
   methods: {
     reload() {
+      if(this.loading) return;
       if (this.searchQuery != "") {
         this.beforeQuery = "";
         this.search();
@@ -84,7 +85,7 @@ module.exports = {
     },
     search(e) {
       // 関係ないキーでの検索を防止
-      console.log(this.enableRealTimeSearch);
+      if(this.loading) return;
       if (this.enableRealTimeSearch) {
         // 重複する検索はやめよう！
         if (this.beforeQuery == this.searchQuery) {
