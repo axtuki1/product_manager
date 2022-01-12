@@ -1,8 +1,13 @@
 <template>
   <div class="settings">
+    
+    <button class="btn danger" v-on:click="$router.push('./danger')">
+      <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i> 危険な操作
+    </button>
     <button class="btn danger" v-on:click="$APPDATA.util_methods.logout">
       <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i> ログアウト
     </button>
+    
   </div>
 </template>
 
@@ -24,9 +29,8 @@ module.exports = {
 </script>
 
 <style scoped>
-.search-view {
-    display: flex;
-    flex-direction: column;
+.settings {
+    padding: 10px;
 }
 
 h1 {

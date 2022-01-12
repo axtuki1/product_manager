@@ -1,8 +1,18 @@
 <template>
-  <button class="reverse" @click="$router.go(-1)">
+  <button class="reverse" @click="push">
     <i class="fas fa-arrow-left"></i>
   </button>
 </template>
+
+<script>
+module.exports = {
+  methods:{
+    push(){
+      this.$router.go(-1);
+    }
+  }
+}
+</script>
 
 <style scoped>
 .reverse {

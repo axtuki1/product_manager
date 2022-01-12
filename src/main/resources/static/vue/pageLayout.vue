@@ -73,6 +73,10 @@ const router = new VueRouter({
           path: "",
           component: httpVueLoader("/vue/page/settings/general.vue"),
         },
+        {
+          path: "/danger",
+          component: httpVueLoader("/vue/page/settings/danger.vue"),
+        },
       ],
     },
     {
