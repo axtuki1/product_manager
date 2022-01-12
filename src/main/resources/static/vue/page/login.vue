@@ -110,6 +110,7 @@ module.exports = {
         .then((loginResult) => {
           if (loginResult.status == "ok") {
             this.$APPDATA.isLogin = true;
+            this.$APPDATA.disconnectedDetected = false;
             this.loggedIn();
           } else {
             this.error_handle(`ログインに失敗しました。

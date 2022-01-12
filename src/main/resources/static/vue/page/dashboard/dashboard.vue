@@ -6,7 +6,7 @@
           今月の売上
         </div>
         <div class="upper-per"><span>伸び率</span>: <span>0.1%</span></div>
-        <div class="value">1,100,000円</div>
+        <div class="value">{{ $APPDATA.util_methods.numberFormat(thisMonthSalesScore) }}円</div>
       </div>
       <div class="ranking">
         <div class="title">売上トップ</div>
@@ -27,15 +27,41 @@ module.exports = {
   data: function () {
     return {
       loading: true,
+      thisMonthSalesScore: 0,
     };
   },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
   },
-  methods: {},
+  methods: {
+    reload(){
+      fetch("/api/v1/sales", {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((d) => d.json())
+        .then((j) => {
+          this.thisMonthSalesScore = j.data.this_month_sales_score;
+          this.lastMonthSalesScore = j.data.last_month_sales_score;
+        });
+      fetch("/api/v1/sales/history", {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((d) => d.json())
+        .then((j) => {
+          this.salesList = j.data.sales_history;
+          this.loading = false;
+        });
+    },
+  },
   mounted() {
     this.$emit("update-title", "");
-    this.loading = false;
+    this.reload();
   },
 };
 </script>

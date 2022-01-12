@@ -87,6 +87,20 @@ const router = new VueRouter({
           path: "",
           component: httpVueLoader("/vue/page/analytics/general.vue"),
         },
+        {
+          path: "history",
+          component: null,
+        },
+        {
+          path: "history/:id",
+          component: httpVueLoader("/vue/page/analytics/details.vue"),
+          props: true,
+        },
+        {
+          path: "history/:id/edit",
+          component: httpVueLoader("/vue/page/analytics/edit.vue"),
+          props: true,
+        },
       ],
     },
     { path: "*", component: httpVueLoader("/vue/notfound.vue") },
