@@ -64,7 +64,6 @@ module.exports = {
   },
   methods: {
     reload() {
-      if(this.loading) return;
       if (this.searchQuery != "") {
         this.beforeQuery = "";
         this.search();
@@ -106,7 +105,6 @@ module.exports = {
           return;
         }
       } else if (e != null && e.code != "Enter") {
-        console.log(e);
         return;
       }
       this.beforeQuery = this.searchQuery;

@@ -6,7 +6,7 @@
           設定
         </div>
         <div v-else>
-          {{this.titleText}} <small> / 設定</small>
+          <reverse-button></reverse-button>{{this.titleText}} <small> / 設定</small>
         </div>
       </h1>
     </header>
@@ -24,7 +24,7 @@ module.exports = {
     };
   },
   components: {
-    
+    "reverse-button": httpVueLoader("/vue/component/reverse-button.vue")
   },
   methods: {
     updateTitle(text){

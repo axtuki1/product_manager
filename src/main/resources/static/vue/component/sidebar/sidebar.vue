@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="{ close : isClose }" v-on:click="toggleSidebar">
+  <div v-bind:class="{ close: isClose }" v-on:click="toggleSidebar">
     <div class="sidebar-column" v-on:click.stop="blank">
       <sidebar-item
         v-for="item in topList"
@@ -16,7 +16,11 @@
         v-bind:class="[item.id]"
         class="bottomList"
       ></sidebar-item>
-      <div class="sidebar-item bottomList close" v-on:click="toggleSidebar">
+      <div
+        class="sidebar-item bottomList close"
+        @click.left="toggleSidebar"
+        @click.middle="toggleSidebar"
+      >
         <div class="icon">
           <i class="fas fa-arrow-circle-left fa-fw"></i>
         </div>
@@ -37,43 +41,47 @@ module.exports = {
           id: "dashboard",
           name: "ダッシュボード",
           icon: '<i class="fas fa-tachometer-alt fa-fw"></i>',
-          func: () => {
-            v.push("/");
+          func: (e) => {
+            v.push("/", e);
           },
         },
         {
           id: "analytics",
           name: "売上/販売分析",
           icon: '<i class="fas fa-chart-line fa-fw"></i>',
-          func() {
-            v.push("/analytics");
+          func(e) {
+            v.push("/analytics", e);
           },
         },
         {
           id: "product-management",
           name: "商品管理",
           icon: '<i class="fas fa-box-open fa-fw"></i>',
-          func() {
-            v.push("/product");
+          func(e) {
+            v.push("/product", e);
           },
         },
       ],
       bottomList: [
         {
           id: "register",
-          name: '会計ツール',
+          name: "会計ツール",
           icon: '<i class="fas fa-cash-register fa-fw"></i>',
-          func() {
-            location.href = "/register"
+          func(e) {
+            if (e.button != 1) {
+              location.href = "/register";
+            } else {
+              window.open("/register", "_blank");
+            }
           },
-          external: true
+          external: true,
         },
         {
           id: "settings",
           name: "設定",
           icon: '<i class="fas fa-cog fa-fw"></i>',
-          func() {
-            v.push("/settings");
+          func(e) {
+            v.push("/settings", e);
           },
         },
       ],
@@ -83,17 +91,21 @@ module.exports = {
     "sidebar-item": httpVueLoader("/vue/component/sidebar/sidebar-item.vue"),
   },
   methods: {
-    toggleSidebar(){
+    toggleSidebar() {
       this.isClose = !this.isClose;
     },
-    push(path){
-      this.$router.push(path).catch((error) => {});
+    push(path, e) {
+      if (e.button != 1) {
+        this.$router.push(path).catch((error) => {});
+      } else {
+        window.open(path, "_blank");
+      }
       this.isClose = true;
     },
-    blank(){
+    blank() {
       // do nothing.
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -139,5 +151,4 @@ module.exports = {
 .sidebar-item .external {
   margin: 0 7px;
 }
-
 </style>

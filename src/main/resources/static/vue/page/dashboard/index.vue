@@ -6,7 +6,7 @@
           ダッシュボード
         </div>
         <div v-else>
-          {{this.titleText}} <small> / ダッシュボード</small>
+          <reverse-button></reverse-button>{{this.titleText}} <small> / ダッシュボード</small>
         </div>
       </h1>
     </header>
@@ -24,7 +24,7 @@ module.exports = {
     };
   },
   components: {
-    
+    "reverse-button": httpVueLoader("/vue/component/reverse-button.vue")
   },
   methods: {
     updateTitle(text){

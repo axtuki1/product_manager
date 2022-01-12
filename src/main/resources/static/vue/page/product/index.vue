@@ -6,7 +6,7 @@
           商品管理
         </div>
         <div v-else>
-          {{this.titleText}} <small> / 商品管理</small>
+          <reverse-button></reverse-button>{{this.titleText}} <small> / 商品管理</small>
         </div>
       </h1>
     </header>
@@ -24,7 +24,7 @@ module.exports = {
     };
   },
   components: {
-    
+    "reverse-button": httpVueLoader("/vue/component/reverse-button.vue")
   },
   methods: {
     updateTitle(text){
@@ -84,6 +84,7 @@ i.anim {
   padding: 10px 15px;
   border-bottom: 1px solid #000;
 }
+
 
 
 </style>
