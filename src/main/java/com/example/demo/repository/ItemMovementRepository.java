@@ -13,4 +13,5 @@ import com.example.demo.entity.ItemMovement;
 
 public interface ItemMovementRepository extends JpaRepository<ItemMovement,Integer>, JpaSpecificationExecutor<ItemMovement> {
 //    List<Item> findAllSort(int offset, int limit, String sort);
+	List<ItemMovement> findByTargetId(int targetId);
 }

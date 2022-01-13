@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.repository.ItemMovementRepository;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.SalesDataRepository;
 
@@ -26,6 +27,9 @@ public class GetSalesHistoryApiController {
 
 	@Autowired
 	SalesDataRepository repository;
+	
+	@Autowired
+	ItemMovementRepository move_repository;
 
 	/**
 	 * 商品一覧を返すAPI。
@@ -39,7 +43,8 @@ public class GetSalesHistoryApiController {
 	public HashMap<String, Object> viewPage(Model model, HttpSession session,
 			@PathVariable(name = "id") int id) {
 		HashMap<String, Object> data = new HashMap<>();
-		data.put("itemData", repository.findById(id));
+		data.put("salesData", repository.findById(id));
+		data.put("move", move_repository.findByTargetId(id));
 		return data;
 	}
 
