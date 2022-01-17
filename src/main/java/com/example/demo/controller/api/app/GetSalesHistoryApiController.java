@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.repository.ItemMovementRepository;
 import com.example.demo.repository.ItemRepository;
+import com.example.demo.repository.ItemSalesRepository;
 import com.example.demo.repository.SalesDataRepository;
 
 @Controller
@@ -29,7 +30,7 @@ public class GetSalesHistoryApiController {
 	SalesDataRepository repository;
 	
 	@Autowired
-	ItemMovementRepository move_repository;
+	ItemSalesRepository itemSales_repository;
 
 	/**
 	 * 商品一覧を返すAPI。
@@ -44,7 +45,7 @@ public class GetSalesHistoryApiController {
 			@PathVariable(name = "id") int id) {
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("salesData", repository.findById(id));
-		data.put("move", move_repository.findByTargetId(id));
+		data.put("move", move_repository.findBySalesCode(id));
 		return data;
 	}
 

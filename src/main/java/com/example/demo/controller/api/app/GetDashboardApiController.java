@@ -41,7 +41,7 @@ public class GetDashboardApiController {
 	/**
 	 * ダッシュボードに必要なデータを返すAPI。
 	 * 
-	 * @Endpoint /api/v1/sales/history
+	 * @Endpoint /api/v1/dashboards
 	 * @Method GET
 	 */
 	@RequestMapping(path = "/api/v1/dashboard", method = RequestMethod.GET)
