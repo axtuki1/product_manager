@@ -15,6 +15,6 @@ public interface ItemSalesRepository extends JpaRepository<ItemSales,Integer>, J
 
 	List<ItemSales> findByItemId(int itemId);
 	
-	List<ItemSales> findBySalesCode(int salesCode);
+	List<ItemSales> findBySalesCode(int saleCode);
 	
 }

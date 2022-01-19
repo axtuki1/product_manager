@@ -17,7 +17,7 @@ public class ItemSales {
 	@Column(name = "item_id")
 	public Integer itemId;
 	@Column(name = "sales_code")
-	public Integer saleCode;
+	public Integer salesCode;
 	@Column(name = "item_amount")
 	public Integer amount;
 	@Column(name = "item_price")
@@ -34,11 +34,11 @@ public class ItemSales {
 	public void setItemId(Integer itemId) {
 		this.itemId = itemId;
 	}
-	public Integer getSaleCode() {
-		return saleCode;
+	public Integer getSalesCode() {
+		return salesCode;
 	}
-	public void setSaleCode(Integer saleCode) {
-		this.saleCode = saleCode;
+	public void setSalesCode(Integer salesCode) {
+		this.salesCode = salesCode;
 	}
 	public Integer getPrice() {
 		return price;
@@ -56,7 +56,7 @@ public class ItemSales {
 		ItemSales out = new ItemSales();
 		out.setItemId(itemId);
 		out.setPrice(price);
-		out.setSaleCode(salesCode);
+		out.setSalesCode(salesCode);
 		out.setAmount(amount);
 		return out;
 	}

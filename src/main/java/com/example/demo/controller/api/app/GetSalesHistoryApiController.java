@@ -2,6 +2,9 @@ package com.example.demo.controller.api.app;
 
 import java.util.HashMap;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NamedQuery;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class GetSalesHistoryApiController {
 	@Autowired
 	ItemSalesRepository itemSales_repository;
 
+	@PersistenceContext
+	EntityManager manager;
+	
 	/**
 	 * 商品一覧を返すAPI。
 	 * 
@@ -45,7 +51,12 @@ public class GetSalesHistoryApiController {
 			@PathVariable(name = "id") int id) {
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("salesData", repository.findById(id));
-		data.put("move", move_repository.findBySalesCode(id));
+		data.put(
+					"move", 
+					manager.createNativeQuery(
+							"SELECT * FROM `item_sales` A INNER JOIN `items` B ON A.item_id = B.item_id WHERE A.item_id = :id"
+							).setParameter("id", id).getResultList()
+				);
 		return data;
 	}
 
