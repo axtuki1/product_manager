@@ -110,7 +110,7 @@ module.exports = {
     })
       .then((d) => d.json())
       .then((j) => {
-        this.itemData = j.data.itemData;
+        this.itemData = j.data.move;
         this.loading = false;
       })
       .catch((e) => {

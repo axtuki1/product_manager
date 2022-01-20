@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,8 +36,8 @@ public class GetSalesHistoryApiController {
 	@Autowired
 	ItemSalesRepository itemSales_repository;
 
-	@PersistenceContext
-	EntityManager manager;
+	@Autowired
+	JdbcTemplate jdbc;
 	
 	/**
 	 * 販売情報を返すAPI。
@@ -53,9 +54,10 @@ public class GetSalesHistoryApiController {
 		data.put("salesData", repository.findById(id));
 		data.put(
 					"move", 
-					manager.createNativeQuery(
-							"SELECT A.item_id, item_name, A.item_price FROM `item_sales` A INNER JOIN `items` B ON A.item_id = B.item_id WHERE A.sales_code = :id"
-							).setParameter("id", id).getResultList()
+					jdbc.queryForList(
+							"SELECT A.item_id, item_name, A.item_price, A.item_amount FROM `item_sales` A INNER JOIN `items` B ON A.item_id = B.item_id WHERE A.sales_code = ?", 
+							id
+					)
 				);
 		return data;
 	}
