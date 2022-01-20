@@ -39,9 +39,9 @@ public class GetSalesScoreApiController {
 	JdbcTemplate jdbcTemplate;
 
 	/**
-	 * 販売履歴を返すAPI。
+	 * 販売統計を返すAPI
 	 * 
-	 * @Endpoint /api/v1/sales/history
+	 * @Endpoint /api/v1/sales
 	 * @Method GET
 	 */
 	@RequestMapping(path = "/api/v1/sales", method = RequestMethod.GET)

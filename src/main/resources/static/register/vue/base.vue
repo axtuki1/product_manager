@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="right">
-      <div class="catalog" v-if="!isDetails">catalog</div>
+      <div class="catalog" v-if="!isDetails">[ワンタッチ登録部分]</div>
       <div v-if="isDetails" class="details">
         <div class="billing-total-amount">
           <div class="label">{{ $t("total.label") }}</div>
@@ -197,6 +197,9 @@ module.exports = {
     },
     KeyPadInput(text) {
       // this.currentKeyPadText += text;
+      if(document.activeElement){
+        document.activeElement.blur();
+      }
       let value = 0;
       if (this.isDetails) {
         value = this.payment_amount + "" + text;
@@ -330,9 +333,10 @@ module.exports = {
               name: data.name,
               itemId: data.id,
               type: "register",
-              amount: 1,
+              amount: this.keypadItem.amount == 0 ? 1 : this.keypadItem.amount,
               price: data.price,
             });
+            this.keypadItem.amount = 0;
           }
           this.recalc();
         });

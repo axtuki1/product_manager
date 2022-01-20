@@ -39,7 +39,7 @@ public class GetSalesHistoryApiController {
 	EntityManager manager;
 	
 	/**
-	 * 商品一覧を返すAPI。
+	 * 販売情報を返すAPI。
 	 * 
 	 * @Endpoint /api/v1/item/{id}
 	 * @Method GET
@@ -54,7 +54,7 @@ public class GetSalesHistoryApiController {
 		data.put(
 					"move", 
 					manager.createNativeQuery(
-							"SELECT * FROM `item_sales` A INNER JOIN `items` B ON A.item_id = B.item_id WHERE A.item_id = :id"
+							"SELECT A.item_id, item_name, A.item_price FROM `item_sales` A INNER JOIN `items` B ON A.item_id = B.item_id WHERE A.sales_code = :id"
 							).setParameter("id", id).getResultList()
 				);
 		return data;

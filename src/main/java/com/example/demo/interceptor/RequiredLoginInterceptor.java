@@ -46,7 +46,6 @@ public class RequiredLoginInterceptor {
 				data = pjp.proceed();
 			} catch ( Exception e ) {
 				e.printStackTrace();
-				isOK = false;
 			}
 		}
 		HttpStatus status = HttpStatus.OK;
