@@ -19,14 +19,8 @@
           <i class="fas fa-trash-alt"></i> 削除
         </button>
       </div>
-      <h1>{{ itemData.name }}</h1>
+      <h1>{{ dateStr }}</h1>
       <div class="infomation">
-        <infomation-item
-          v-for="info in infoData"
-          v-bind:key="info.id"
-          v-bind:info="info"
-          v-bind:item-data="itemData"
-        ></infomation-item>
       </div>
     </div>
     <div class="deleting-window" v-on:click.stop.prevent="/* nope */" v-bind:class="{ show: deleting }">
@@ -43,25 +37,8 @@ module.exports = {
       loading: true,
       deleting: false,
       error: false,
+      dateStr: "",
       itemData: {},
-      infoData: [
-        {
-          id: "genre",
-          key: "ジャンル",
-        },
-        {
-          id: "price",
-          key: "単価",
-        },
-        {
-          id: "amount",
-          key: "個数",
-        },
-        {
-          id: "code",
-          key: "バーコード",
-        },
-      ],
     };
   },
   components: {
@@ -111,9 +88,13 @@ module.exports = {
       .then((d) => d.json())
       .then((j) => {
         this.itemData = j.data.move;
+        this.salesData = j.data.salesData;
+        const date = new Date(Date.parse(this.salesData.paymentTimestamp));
+        this.dateStr = date.getFullYear() + "年"+(date.getMonth()+1)+"月"+date.getDate()+"日 "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
         this.loading = false;
       })
       .catch((e) => {
+        console.log(e);
         this.loading = false;
         this.error = true;
       });
