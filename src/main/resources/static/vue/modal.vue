@@ -5,7 +5,7 @@
     v-on:click.stop.prevent.self="clickBackgound"
   >
     <div class="modal">
-      <slot class="modal-content">{{ modal.content }}<button class="btn primary" v-on:click="closeModal">OK</button>
+      <slot class="modal-content">{{ modal.content }}<button class="btn primary" v-on:click="closeModal" v-if="modal.ok_btn">OK</button>
       </slot>
     </div>
   </div>

@@ -5,14 +5,28 @@
         <div class="title">
           今月の売上
         </div>
-        <div class="upper-per"><span>伸び率</span>: <span>0.1%</span></div>
+        <div class="upper-per"><span>伸び率</span>: <span>{{ 
+              Math.floor((thisMonthSalesScore - lastMonthSalesScore) / lastMonthSalesScore * 10) / 10
+            }}%</span></div>
         <div class="value">{{ $APPDATA.util_methods.numberFormat(thisMonthSalesScore) }}円</div>
       </div>
       <div class="ranking">
-        <div class="title">売上トップ</div>
-        <div class="first">1位 / 商品A</div>
-        <div class="second">2位 / 商品B</div>
-        <div class="third">3位 / 商品C</div>
+        <div class="title">今月売上トップ</div>
+        <div class="first" v-if="best[0] != null">
+          <div class="label">1位</div>
+          <div class="name">{{ best[0].item_name }}</div>
+          <div class="score">{{ best[0].SUMS }}</div>
+        </div>
+        <div class="second" v-if="best[1] != null">
+          <div class="label">2位</div>
+          <div class="name">{{ best[1].item_name }}</div>
+          <div class="score">{{ best[1].SUMS }}</div>
+          </div>
+        <div class="third" v-if="best[2] != null">
+          <div class="label">3位</div>
+          <div class="name">{{ best[2].item_name }}</div>
+          <div class="score">{{ best[2].SUMS }}</div>
+          </div>
       </div>
     </div>
     <div class="loading" v-show="loading">
@@ -28,6 +42,8 @@ module.exports = {
     return {
       loading: true,
       thisMonthSalesScore: 0,
+      lastMonthSalesScore:0,
+      best: []
     };
   },
   components: {
@@ -35,7 +51,7 @@ module.exports = {
   },
   methods: {
     reload(){
-      fetch("/api/v1/sales", {
+      fetch("/api/v1/dashboard", {
         method: "GET",
         headers: new Headers({
           "content-type": "application/json",
@@ -45,16 +61,8 @@ module.exports = {
         .then((j) => {
           this.thisMonthSalesScore = j.data.this_month_sales_score;
           this.lastMonthSalesScore = j.data.last_month_sales_score;
-        });
-      fetch("/api/v1/sales/history", {
-        method: "GET",
-        headers: new Headers({
-          "content-type": "application/json",
-        }),
-      })
-        .then((d) => d.json())
-        .then((j) => {
-          this.salesList = j.data.sales_history;
+          this.best = j.data.best;
+          console.log(this.best);
           this.loading = false;
         });
     },
@@ -109,4 +117,44 @@ h1 {
   width: 100%;
   text-align: right;
 }
+
+.ranking > * {
+  display: flex;
+  align-items: baseline;
+}
+
+.ranking > * > * {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.ranking .label {
+  font-size: 1.3em;
+}
+
+.ranking .first .label{
+  color: rgb(247, 71, 40);
+}
+
+.ranking .second .label{
+  color: rgb(247, 40, 247);
+}
+
+.ranking .third .label{
+  color: rgb(113, 40, 247);
+}
+
+.ranking .name {
+  font-size: 1.3em;
+}
+
+.ranking .score {
+  font-size: 1.2em;
+}
+
+.score:after {
+  content: "円";
+}
+
+
 </style>

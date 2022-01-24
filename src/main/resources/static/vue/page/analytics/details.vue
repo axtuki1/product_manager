@@ -20,7 +20,20 @@
         </button>
       </div>
       <h1>{{ dateStr }}</h1>
-      <div class="infomation">
+      <div class="detail-info">
+        <div class="">
+          売上金額: {{ 
+            $APPDATA.util_methods.numberFormat(
+              salesData.billingAmount
+             ) }} 円
+        </div>
+      </div>
+      <div class="items">
+        <product-item
+        v-for="item in itemData"
+        v-bind:key="item.name"
+        v-bind:item="item"
+      ></product-item>
       </div>
     </div>
     <div class="deleting-window" v-on:click.stop.prevent="/* nope */" v-bind:class="{ show: deleting }">
@@ -39,20 +52,22 @@ module.exports = {
       error: false,
       dateStr: "",
       itemData: {},
+      genreList: {},
+      salesData: {}
     };
   },
   components: {
-    "infomation-item": httpVueLoader("/vue/component/product/infomation.vue"),
+    "product-item": httpVueLoader("/vue/component/analytics/product-item.vue"),
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
   },
   methods: {
     editPush() {
-      this.$router.push("/analytics/history/" + this.itemData.id + "/edit");
+      this.$router.push("/analytics/history/" + this.id + "/edit");
     },
     removePush() {
       this.deleting = true;
       const deleteMethod = () => {
-        fetch("/api/v1/sales/history/" + this.itemData.id, {
+        fetch("/api/v1/sales/history/" + this.id, {
           method: "DELETE",
           headers: new Headers({
             "content-type": "application/json",
@@ -61,10 +76,10 @@ module.exports = {
           .then((res) => res.json())
           .then((j) => {
             this.deleting = false;
-            this.$APPDATA.util_methods.callNotice("商品を削除しました。", {
+            this.$APPDATA.util_methods.callNotice("販売情報を削除しました。", {
               sec: 3,
             });
-            this.$router.push("/product");
+            this.$router.push("/analytics");
           })
           .catch((error) => {
             this.deleting = false;
@@ -78,7 +93,7 @@ module.exports = {
     },
   },
   mounted() {
-    this.$emit("update-title", "商品詳細");
+    this.$emit("update-title", "販売情報詳細");
     fetch("/api/v1/sales/history/" + this.id, {
       method: "GET",
       headers: new Headers({
@@ -103,12 +118,16 @@ module.exports = {
 </script>
 
 <style scoped>
-h1 {
-  margin: 0;
+h1, .detail-info {
+  margin: 10px 15px;
 }
 
-.item-details {
-  padding: 10px 15px;
+.detail-info {
+  font-size: 1.2em;
+}
+
+.items{
+  border-top: 1px solid #000;
 }
 
 .btn i {

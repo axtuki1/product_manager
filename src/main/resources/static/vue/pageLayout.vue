@@ -176,10 +176,7 @@ module.exports = {
         const default_options = {
           title: "",
           force_ok: false,
-          ok_btn: {
-            text: "OK",
-            func: () => {},
-          },
+          ok_btn: true
         };
         options = Object.assign(default_options, options);
         v.modals.push({

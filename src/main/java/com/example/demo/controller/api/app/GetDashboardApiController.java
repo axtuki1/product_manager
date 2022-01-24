@@ -59,6 +59,12 @@ public class GetDashboardApiController {
 				+ "WHERE DATE_FORMAT(sale_payment_timestamp, '%Y%m') = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y%m')"
 				);
 		data.put("last_month_sales_score", res.get(0).get("sales_score"));
+		res = jdbcTemplate.queryForList(
+				"SELECT A.item_id, B.item_name, SUM(A.item_price) AS SUMS FROM `item_sales` A "
+				+ "INNER JOIN `items` B ON A.item_id = B.item_id "
+				+ "INNER JOIN `sales_data` C ON A.sales_code = C.sale_id WHERE DATE_FORMAT(C.sale_payment_timestamp, '%Y%m') = DATE_FORMAT(NOW(), '%Y%m') "
+				+ "GROUP BY A.item_id ORDER BY SUMS DESC LIMIT 3;");
+		data.put("best", res);
 		return data;
 	}
 

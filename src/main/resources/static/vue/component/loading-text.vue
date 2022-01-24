@@ -1,6 +1,6 @@
 <template>
     <div class="loading-text">
-        Loading<span>.</span><span style="animation-delay: 50ms">.</span><span style="animation-delay: 100ms">.</span>
+        <slot>Loading</slot><span>.</span><span style="animation-delay: 50ms">.</span><span style="animation-delay: 100ms">.</span>
     </div>
 </template>
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.example.demo.bean.EndPointNotFoundException;
 import com.example.demo.entity.Genre;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,6 +45,13 @@ public class RequiredLoginInterceptor {
 		} else {
 			try {
 				data = pjp.proceed();
+			} catch( EndPointNotFoundException e ) {
+				return new HashMap<String, Object>() {
+					{
+						put("error", "指定されたエンドポイントは存在しません。");
+						put("statusCode", 404);
+					}
+				};
 			} catch ( Exception e ) {
 				e.printStackTrace();
 			}

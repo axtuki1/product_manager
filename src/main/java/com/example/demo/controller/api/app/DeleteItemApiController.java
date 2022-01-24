@@ -1,6 +1,7 @@
 package com.example.demo.controller.api.app;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -41,6 +42,7 @@ public class DeleteItemApiController {
 	public HashMap<String, Object> viewPage(Model model, HttpSession session,
 			@PathVariable(name = "id") int id) {
 		HashMap<String, Object> data = new HashMap<>();
+		if(id < 0) return null;
 		repository.deleteById(id);
 		data.put("result", "ok");
 		return data;
