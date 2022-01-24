@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <message class="danger">
-      <strong>本ページ内の操作は破壊的な操作を含む場合があります！</strong
+      <strong>本ページ内の操作は破壊的な操作を含むみます！</strong
       ><br />
       利用する際は十分ご注意ください。
     </message>
@@ -14,7 +14,7 @@
       このボタンを使用する場合は
       <strong>Shiftを押しながら"右クリック"</strong> してください。
       <message class="danger">
-        <strong>ボタンを押すと処理が開始されます</strong>
+        <strong>正しいパスワードを入力し、ボタンを押すと処理が開始されます</strong>
       </message>
     </p>
     <p>
