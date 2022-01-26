@@ -33,8 +33,9 @@ public class NullTestApiController {
 
 	/**
 	 * ぬるぽ！
+	 * ...interceptorでnullが渡された時にどう動くかを試すときのエンドポイント。
 	 * 
-	 * @Endpoint /api/v1/register
+	 * @Endpoint /api/v1/null
 	 * @Method GET
 	 */
 	@RequestMapping(path = "/api/v1/null", method = RequestMethod.GET)

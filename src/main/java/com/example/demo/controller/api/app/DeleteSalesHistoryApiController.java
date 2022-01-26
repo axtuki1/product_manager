@@ -22,18 +22,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.entity.Item;
 import com.example.demo.form.NewItemInsertForm;
 import com.example.demo.repository.ItemRepository;
+import com.example.demo.repository.ItemSalesRepository;
 import com.example.demo.repository.SalesDataRepository;
 
 @Controller
 public class DeleteSalesHistoryApiController {
 
 	@Autowired
-	SalesDataRepository repository;
+	SalesDataRepository salesdata_repo;
+	
+	@Autowired
+	ItemSalesRepository itemsales_repo;
 
 	/**
-	 * 商品を削除するAPI。
+	 * 販売情報を削除するAPI。
 	 * 
-	 * @Endpoint /api/v1/item/{id}
+	 * @Endpoint /api/v1/sales/history/{id}
 	 * @Method DELETE
 	 */
 	@RequestMapping(path = "/api/v1/sales/history/{id}", method = RequestMethod.DELETE)
@@ -42,7 +46,8 @@ public class DeleteSalesHistoryApiController {
 	public HashMap<String, Object> viewPage(Model model, HttpSession session,
 			@PathVariable(name = "id") int id) {
 		HashMap<String, Object> data = new HashMap<>();
-		repository.deleteById(id);
+		itemsales_repo.deleteBySalesCode(id);
+		salesdata_repo.deleteById(id);
 		data.put("result", "ok");
 		return data;
 	}

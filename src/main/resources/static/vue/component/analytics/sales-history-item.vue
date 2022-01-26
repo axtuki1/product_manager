@@ -19,9 +19,9 @@
       </div>
     </div>
     <div class="moderatorBtn">
-      <button class="btn edit" v-on:click.stop.prevent="editPush">
+      <!-- <button class="btn edit" v-on:click.stop.prevent="editPush">
         <i class="fas fa-pencil-alt"></i> 編集
-      </button>
+      </button> -->
       <button class="btn remove danger" v-on:click.stop.prevent="removePush">
         <i class="fas fa-trash-alt"></i> 削除
       </button>
@@ -55,7 +55,7 @@ module.exports = {
     removePush() {
       this.deleting = true;
       const deleteMethod = () => {
-        fetch("/api/v1/analytics/" + this.item.id, {
+        fetch("/api/v1/sales/history/" + this.item.id, {
           method: "DELETE",
           headers: new Headers({
             "content-type": "application/json",

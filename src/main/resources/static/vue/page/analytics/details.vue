@@ -7,14 +7,14 @@
     <div class="error center-dialog" v-if="error">
       <i class="fas fa-exclamation-triangle"></i>
       <div style="font-weight: bold">
-        指定された商品は見つかりませんでした。
+        指定された販売情報は見つかりませんでした。
       </div>
     </div>
     <div class="item-details" v-if="!error && !loading">
       <div class="moderatorBtn">
-        <button class="btn edit" v-on:click.stop.prevent="editPush">
+        <!-- <button class="btn edit" v-on:click.stop.prevent="editPush">
           <i class="fas fa-pencil-alt"></i> 編集
-        </button>
+        </button> -->
         <button class="btn remove danger" v-on:click.stop.prevent="removePush">
           <i class="fas fa-trash-alt"></i> 削除
         </button>

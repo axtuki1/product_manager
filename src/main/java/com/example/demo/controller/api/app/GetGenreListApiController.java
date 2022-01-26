@@ -28,11 +28,9 @@ public class GetGenreListApiController {
 	GenreRepository repository;
 	
 	/**
-	 * 商品一覧を返すAPI。
+	 * 商品ジャンルを返すAPI。
 	 * @Endpoint /api/v1/items 
 	 * @Method GET
-	 * @param LIMIT  返すデータ数を指定する Default: 30
-	 * @param offset 先頭からずらす個数    Default: 0
 	 */
 	@RequestMapping(path = "/api/v1/genre", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う

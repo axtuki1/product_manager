@@ -27,7 +27,7 @@ public class GetItemByCodeApiController {
 	ItemRepository repository;
 
 	/**
-	 * 商品一覧を返すAPI。
+	 * 商品情報をバーコードから返すAPI。
 	 * 
 	 * @Endpoint /api/v1/item/{id}
 	 * @Method GET

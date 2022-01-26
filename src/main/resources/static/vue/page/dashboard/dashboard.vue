@@ -15,17 +15,17 @@
         <div class="first" v-if="best[0] != null">
           <div class="label">1位</div>
           <div class="name">{{ best[0].item_name }}</div>
-          <div class="score">{{ best[0].SUMS }}</div>
+          <div class="score">{{ $APPDATA.util_methods.numberFormat(best[0].SUMS) }}</div>
         </div>
         <div class="second" v-if="best[1] != null">
           <div class="label">2位</div>
           <div class="name">{{ best[1].item_name }}</div>
-          <div class="score">{{ best[1].SUMS }}</div>
+          <div class="score">{{ $APPDATA.util_methods.numberFormat(best[1].SUMS) }}</div>
           </div>
         <div class="third" v-if="best[2] != null">
           <div class="label">3位</div>
           <div class="name">{{ best[2].item_name }}</div>
-          <div class="score">{{ best[2].SUMS }}</div>
+          <div class="score">{{ $APPDATA.util_methods.numberFormat(best[2].SUMS) }}</div>
           </div>
       </div>
     </div>

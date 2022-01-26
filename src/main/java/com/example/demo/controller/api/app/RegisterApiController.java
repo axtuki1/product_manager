@@ -66,6 +66,7 @@ public class RegisterApiController {
 		
 		List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) form.get("items");
 		for(HashMap<String, Object> item : items) {
+			if(item.get("itemId") == null) continue; 
 			itemmove.add(ItemSales.gen(
 					id,
 					(int)item.get("itemId"),

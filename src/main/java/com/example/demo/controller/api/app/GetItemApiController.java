@@ -30,7 +30,7 @@ public class GetItemApiController {
 	ItemRepository repository;
 
 	/**
-	 * 商品一覧を返すAPI。
+	 * 商品情報を返すAPI。
 	 * 
 	 * @Endpoint /api/v1/item/{id}
 	 * @Method GET

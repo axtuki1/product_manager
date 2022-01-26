@@ -30,7 +30,7 @@ public class AddTestItemApiController {
 	ItemRepository repository;
 
 	/**
-	 * 新規に商品を追加するAPI。
+	 * テスト用の商品を追加するAPI。
 	 * @Endpoint /api/v1/item/new
 	 * @Method GET
 	 */

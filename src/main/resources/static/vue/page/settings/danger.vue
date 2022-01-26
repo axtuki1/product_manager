@@ -1,20 +1,20 @@
 <template>
   <div class="settings">
     <message class="danger">
-      <strong>本ページ内の操作は破壊的な操作を含むみます！</strong
-      ><br />
+      <strong>本ページ内の操作は破壊的な操作を含みます！</strong><br />
       利用する際は十分ご注意ください。
     </message>
     <h2>一括削除</h2>
     <p>
       各種累積データの一括削除が行えます。<br />
-      <strong
-        >失われたデータは再度入力しない限り元に戻ることはありません！</strong
-      ><br />
-      このボタンを使用する場合は
-      <strong>Shiftを押しながら"右クリック"</strong> してください。
       <message class="danger">
-        <strong>正しいパスワードを入力し、ボタンを押すと処理が開始されます</strong>
+        <strong
+          >失われたデータは再度入力しない限り元に戻ることはありません！</strong
+        ><br />
+      </message>
+      <message>
+        <strong>正しいパスワードを入力し、Shiftを押しながら"右クリック"</strong> すると処理が開始されます。<br>
+        誤ったパスワードや無効化されていると失敗と表示されます。
       </message>
     </p>
     <p>
@@ -100,7 +100,9 @@ module.exports = {
           if (j.statusCode != 200) {
             this.$APPDATA.util_methods.callNotice("失敗しました。");
           } else {
-            this.$APPDATA.util_methods.callNotice("販売履歴をすべて削除しました。");
+            this.$APPDATA.util_methods.callNotice(
+              "販売履歴をすべて削除しました。"
+            );
           }
           this.loading = false;
         })

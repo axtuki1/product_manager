@@ -34,6 +34,7 @@ public class ServerTimeApiController {
 
 	/**
 	 * サーバーの現在時刻
+	 * 用途は...不明。
 	 * 
 	 * @Endpoint /api/v1/time
 	 * @Method GET

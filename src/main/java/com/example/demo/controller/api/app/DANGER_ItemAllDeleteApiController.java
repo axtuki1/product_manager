@@ -29,7 +29,7 @@ public class DANGER_ItemAllDeleteApiController {
 
 	/**
 	 * ！危険な操作！
-	 * 販売履歴をすべて削除します。
+	 * 商品情報をすべて削除します。
 	 * パスワードはapplication.propertiesに記述。
 	 * @throws EndPointNotFoundException 
 	 * 
@@ -40,7 +40,7 @@ public class DANGER_ItemAllDeleteApiController {
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public HashMap<String, Object> viewPage(Model model, HttpSession session, @RequestBody PasswordForm password) throws EndPointNotFoundException {
-		if(!password_con.equals(password.getPassword())) throw new EndPointNotFoundException();
+		if(password_con.equals("0") || password_con.equals("") || !password_con.equals(password.getPassword())) throw new EndPointNotFoundException();
 		HashMap<String, Object> data = new HashMap<>();
 		repository.deleteAll();
 		data.put("result", "ok");

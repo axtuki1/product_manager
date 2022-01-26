@@ -26,6 +26,7 @@ module.exports = {
   width: 100%;
   background-color: rgb(227, 229, 255);
   border-left: 5px solid rgb(49, 97, 255);
+  margin: 10px 0;
 }
 
 .message .icon {

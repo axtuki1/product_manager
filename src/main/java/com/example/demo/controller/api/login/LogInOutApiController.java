@@ -30,6 +30,13 @@ import com.example.demo.repository.UserRepository;
 @Controller
 public class LogInOutApiController {
 	
+	/**
+	 *  
+	 *  ログインとログアウトを司るクラス。
+	 *  ここはinterceptorの影響は受けない。つまりアクセスすれば絶対来る。
+	 *   
+	 */
+	
 	@Autowired
 	UserRepository repository;
 	

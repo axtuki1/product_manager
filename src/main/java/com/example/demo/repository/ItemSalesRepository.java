@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.Item;
 import com.example.demo.entity.ItemSales;
@@ -16,5 +17,8 @@ public interface ItemSalesRepository extends JpaRepository<ItemSales,Integer>, J
 	List<ItemSales> findByItemId(int itemId);
 	
 	List<ItemSales> findBySalesCode(int saleCode);
+	
+	@Transactional
+	void deleteBySalesCode(int id);
 	
 }

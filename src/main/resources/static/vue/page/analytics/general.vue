@@ -1,6 +1,6 @@
 <template>
   <div class="analytics">
-    <div v-show="!loading">
+    <div v-show="!loading" class="sales-data">
       <div class="this-month-total-seles">
         <div class="label">
           今月の売上
@@ -17,11 +17,18 @@
         <div class="value">{{ $APPDATA.util_methods.numberFormat(lastMonthSalesScore) }}円</div>
       </div>
     </div>
+    <div class="toolbar">
+      <button v-on:click="reload" class="btn refresh">
+        <span v-if="!loading"><i class="fas fa-sync-alt"></i> 再読込</span>
+        <span v-else><i class="fas fa-sync-alt fa-spin"></i> 読込中</span>
+      </button>
+    </div>
     <div class="item-list" v-show="!loading && salesList.length != 0">
       <sales-history-item
         v-for="item in salesList"
         v-bind:key="item.name"
         v-bind:item="item"
+        @reload="reload"
       ></sales-history-item>
     </div>
     <div class="loading" v-show="loading">
@@ -93,23 +100,36 @@ h1 {
   margin: 0;
 }
 
+.sales-data{
+  display: flex;
+}
+
 .this-month-total-seles,
 .before-month-total-seles {
+  position: relative;
   margin: 10px;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
   background: rgb(235, 235, 235);
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 5px 10px;
+  padding-top: 25px;
+  flex:1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .this-month-total-seles .label,
 .before-month-total-seles .label {
+  position:absolute;
+  top: 10px;
+  left: 10px;
   font-size: .75em;
 }
 
 .before-month-total-seles {
-  font-size: 2rem;
+  font-size: 1.7rem;
 }
 
 .value {
@@ -142,4 +162,14 @@ h1 {
   font-size: 2em;
   margin-bottom: 10px;
 }
+
+.toolbar {
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  padding: 10px;
+}
+
+
+
+
 </style>

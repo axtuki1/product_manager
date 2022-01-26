@@ -91,6 +91,7 @@
         <button class="" v-on:click="sendingDetails">確　定</button>
       </div>
       <div class="register-mode-buttons" v-if="isDetails">
+        <button class="" v-on:click="returnBase">登録画面に戻る</button>
         <button class="" v-on:click="currentInputClear">
           支払い金額の削除
         </button>
@@ -187,6 +188,9 @@ module.exports = {
     sendingDetails() {
       this.isDetails = true;
     },
+    returnBase() {
+      this.isDetails = false;
+    },
     currentInputClear() {
       this.payment_amount = 0;
       this.currentKeyPadText = "";
@@ -197,7 +201,7 @@ module.exports = {
     },
     KeyPadInput(text) {
       // this.currentKeyPadText += text;
-      if(document.activeElement){
+      if (document.activeElement) {
         document.activeElement.blur();
       }
       let value = 0;
@@ -236,28 +240,30 @@ module.exports = {
         .toString()
         .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
     },
-    sendRegisterData(){
+    sendRegisterData() {
       this.loading = true;
       fetch("/api/v1/register", {
-        method:"POST",
+        method: "POST",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json;charset=utf-8"
+          "Content-Type": "application/json;charset=utf-8",
         },
         body: JSON.stringify({
-          items: this.items,
+          items: this.items.filter(
+            (item) => !item.isDeleted && item.type != "delete"
+          ),
           total: this.total,
           payment: this.payment_amount,
-          
-        })
-      }).then((d)=>d.json()).then((json)=>{
+        }),
+      })
+      .then((d) => d.json())
+      .then((json) => {
         this.loading = false;
         this.$APPDATA.util_methods.callModal("登録しました。");
         this.isDetails = false;
         this.allClear();
         this.currentInputClear();
       });
-  
     },
     recalc() {
       this.totalCount = 0;
@@ -293,6 +299,7 @@ module.exports = {
     },
     itemDelete(id) {
       const data = { ...this.items[id] };
+      this.items[id].isDeleted = true;
       data.id = this.currentItemId;
       data.type = "delete";
       this.items.push(data);
@@ -335,6 +342,7 @@ module.exports = {
               type: "register",
               amount: this.keypadItem.amount == 0 ? 1 : this.keypadItem.amount,
               price: data.price,
+              isDeleted: false,
             });
             this.keypadItem.amount = 0;
           }
@@ -387,7 +395,7 @@ module.exports = {
   },
   components: {
     "loading-text": httpVueLoader("/vue/component/loading-text.vue"),
-    "loading": httpVueLoader("/vue/loading-overlay.vue"),
+    loading: httpVueLoader("/vue/loading-overlay.vue"),
     "item-wrapper": httpVueLoader("/register/vue/component/item-wrapper.vue"),
     "current-keypad-item": httpVueLoader(
       "/register/vue/component/current-keypad-item.vue"
