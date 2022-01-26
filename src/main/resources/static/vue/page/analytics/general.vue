@@ -104,6 +104,11 @@ h1 {
   display: flex;
 }
 
+.item-list{
+  overflow: auto;
+  height: calc(100% - 155px);
+}
+
 .this-month-total-seles,
 .before-month-total-seles {
   position: relative;
