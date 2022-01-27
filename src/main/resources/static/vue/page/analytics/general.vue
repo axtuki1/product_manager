@@ -5,7 +5,7 @@
         <div class="label">
           今月の売上
           <div class="upper-per"><span>伸び率</span>: <span>{{ 
-              Math.floor((thisMonthSalesScore - lastMonthSalesScore) / lastMonthSalesScore * 10) / 10
+              Math.floor((thisMonthSalesScore - lastMonthSalesScore) / lastMonthSalesScore * 1000) / 10
             }}%</span></div>
         </div>
         <div class="value">{{ $APPDATA.util_methods.numberFormat(thisMonthSalesScore) }}円</div>
@@ -60,6 +60,7 @@ module.exports = {
   },
   methods: {
     reload(){
+      this.loading = true;
       fetch("/api/v1/sales", {
         method: "GET",
         headers: new Headers({

@@ -3,7 +3,7 @@
     <header>
       <h1>
         <div v-if="titleText == ''">
-          販売分析
+          販売履歴
         </div>
         <div v-else>
           <reverse-button></reverse-button>{{this.titleText}} <small> / 販売分析</small>
