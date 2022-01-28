@@ -53,6 +53,7 @@ const router = new VueRouter({
       children: [
         { path: "", component: httpVueLoader("/vue/page/product/search.vue") },
         { path: "new", component: httpVueLoader("/vue/page/product/new.vue") },
+        { path: "genre", component: httpVueLoader("/vue/page/product/genre.vue") },
         {
           path: ":id",
           component: httpVueLoader("/vue/page/product/details.vue"),
