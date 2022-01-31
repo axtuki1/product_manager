@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,21 +28,24 @@ import com.example.demo.form.RegisterForm;
 import com.example.demo.repository.ItemRepository;
 
 @Controller
-public class ServerTimeApiController {
+public class reCAPTCHASiteKeyApiController {
+
+	@Value("${app.recaptchaSiteKey}") 
+	private String siteKey;
 
 	/**
-	 * サーバーの現在時刻
-	 * 用途は...不明。
+	 * recaptchaのSiteKeyを返すやつ。
+	 * Gitにキーを載せないためのアレ。
 	 * 
-	 * @Endpoint /api/v1/time
+	 * @Endpoint /api/v1/recaptchaKey
 	 * @Method GET
 	 */
-	@RequestMapping(path = "/api/v1/time", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/v1/recaptchaKey", method = RequestMethod.GET)
 	@ResponseBody // JSONとしてレスポンスするために使う
 	@CrossOrigin
 	public HashMap<String, Object> viewPage(Model model, HttpSession session) {
 		return new HashMap<String, Object>(){{
-			put("key", System.currentTimeMillis());
+			put("key", siteKey);
 		}};
 	}
 

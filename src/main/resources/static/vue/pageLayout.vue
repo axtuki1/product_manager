@@ -485,4 +485,9 @@ input {
   color: rgb(182, 182, 182);
   cursor: not-allowed;
 }
+
+input[type="text"], input[type="password"], input[type="number"] {
+  border-radius: 5px;
+  padding: 5px 10px;
+}
 </style>

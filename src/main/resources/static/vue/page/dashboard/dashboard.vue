@@ -62,7 +62,6 @@ module.exports = {
           this.thisMonthSalesScore = j.data.this_month_sales_score;
           this.lastMonthSalesScore = j.data.last_month_sales_score;
           this.best = j.data.best;
-          console.log(this.best);
           this.loading = false;
         });
     },

@@ -26,7 +26,7 @@
     <div class="item-list" v-show="!loading && itemList.length != 0">
       <product-item
         v-for="item in itemList"
-        v-bind:key="item.name"
+        v-bind:key="item.id"
         v-bind:item="item"
         :genre-list="genreList"
         @reload="reload"
@@ -154,7 +154,7 @@ module.exports = {
   width: 70%;
 }
 
-.search-query-input {
+input[type="text"].search-query-input {
   border-radius: 15rem;
   padding: 10px 12.5px;
 }

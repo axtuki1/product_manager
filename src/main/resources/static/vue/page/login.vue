@@ -19,19 +19,34 @@
       <div class="inputField password">
         <label for="password">パスワード</label>
         <input
-          type="password"
+          v-bind:type="isPasswordShow ? 'text' : 'password'"
           id="password"
           v-model="password"
-          v-on:input="check('p', $event)" v-on:keyPress="passEnter($event)"
+          v-on:input="check('p', $event)"
+          v-on:keyPress="passEnter($event)"
         />
         <span class="error_text" v-if="inputErrors[1] != ''">{{
           inputErrors[1]
         }}</span>
       </div>
+      <div class="inputField showPassword">
+        <input type="checkbox" id="showPassword" v-model="isPasswordShow" />
+        <label for="showPassword">
+          <button
+            class="checkboxView"
+            v-on:click="isPasswordShow = !isPasswordShow"
+          ></button>
+          パスワードを表示
+        </label>
+      </div>
+      <div id="recaptcha" class="recaptcha"></div>
       <button
         v-on:click="doLogin"
         class="loginProcess btn primary"
-        v-bind:class="{ processing: isProcessing, disable: (inputErrors.join('') != '') }"
+        v-bind:class="{
+          processing: isProcessing,
+          disable: inputErrors.join('') != '' || !recaptchaAccept,
+        }"
       >
         <div v-if="isProcessing"><i class="fas fa-spinner"></i></div>
         <div v-else>ログイン</div>
@@ -42,7 +57,7 @@
 
 <script>
 module.exports = {
-  props:[],
+  props: [],
   data() {
     return {
       user_name: "",
@@ -51,11 +66,49 @@ module.exports = {
       isError: false,
       error_reason: "",
       inputErrors: [],
+      isPasswordShow: false,
+      recaptchaId: null,
+      recaptchaAccept: false,
+      recaptchaToken: "",
+      recaptchaSiteKey: "",
     };
   },
+  mounted() {
+    fetch("/api/v1/recaptchaKey")
+      .then((d) => d.json())
+      .then((json) => {
+        this.recaptchaSiteKey = json.key;
+        setTimeout(() => {
+          this.recaptchaId = grecaptcha.render("recaptcha", {
+            sitekey: this.recaptchaSiteKey,
+            theme: "light",
+            callback: (res) => {
+              this.recaptchaAccept = true;
+              this.isError = false;
+              this.recaptchaToken = res;
+            },
+            "expired-callback": () => {
+              this.error_handle(`recaptcha認証が期限切れです。
+                               もう一度実行してください。`);
+            },
+            "error-callback": () => {
+              this.error_handle(`recaptcha認証に失敗しました。
+                               時間を空けて再試行してください。`);
+            },
+          });
+        }, 0.5 * 1000);
+      });
+  },
   methods: {
-    loggedIn(){
-      this.$router.push(this.$APPDATA.loginBeforeViewPage.toLowerCase() == "/login" ? "/" : this.$APPDATA.loginBeforeViewPage);
+    recaptchaReset() {
+      grecaptcha.reset(this.recaptchaId);
+    },
+    loggedIn() {
+      this.$router.push(
+        this.$APPDATA.loginBeforeViewPage.toLowerCase() == "/login"
+          ? "/"
+          : this.$APPDATA.loginBeforeViewPage
+      );
     },
     passEnter(e) {
       if (e.key == "Enter") {
@@ -85,6 +138,7 @@ module.exports = {
     },
     doLogin() {
       if (
+        !this.recaptchaAccept ||
         this.isProcessing ||
         !this.inputErrors.every((c) => {
           return c == "";
@@ -100,10 +154,15 @@ module.exports = {
         return;
       }
       fetch("/api/v1/auth/login", {
-        method: "GET",
+        method: "POST",
         headers: new Headers({
           "content-type": "application/json",
-          Authorization: btoa(unescape(encodeURIComponent(this.user_name + ":" + this.password))),
+          Authorization: btoa(
+            unescape(encodeURIComponent(this.user_name + ":" + this.password))
+          ),
+        }),
+        body: JSON.stringify({
+          token: this.recaptchaToken,
         }),
       })
         .then((res) => res.json())
@@ -113,8 +172,16 @@ module.exports = {
             this.$APPDATA.disconnectedDetected = false;
             this.loggedIn();
           } else {
-            this.error_handle(`ログインに失敗しました。
+            if (loginResult.errorCode == "recaptcha-failed") {
+              this.error_handle(
+                `recaptcha認証に失敗しました。
+                               ` + loginResult.reason.join(", ")
+              );
+            } else {
+              this.error_handle(`ログインに失敗しました。
                                ユーザ名とパスワードをお確かめください。`);
+            }
+            this.recaptchaReset();
           }
           this.isProcessing = false;
         })
@@ -182,6 +249,10 @@ module.exports = {
   animation-iteration-count: infinite;
 }
 
+.recaptcha {
+  margin-bottom: 20px;
+}
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
@@ -196,5 +267,47 @@ module.exports = {
 
 .error_text {
   color: #f00;
+}
+
+.showPassword input {
+  display: none;
+}
+
+.showPassword label {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  height: calc(1.2em + 2px);
+}
+
+.showPassword label .checkboxView {
+  position: relative;
+  display: inline-block;
+  width: calc(1.2em + 2px);
+  height: calc(1.2em + 2px);
+  border: 1px solid #000;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  background: rgb(255, 255, 255);
+}
+
+.showPassword .checkboxView:after {
+  position: absolute;
+  content: "";
+  width: 10px;
+  height: 20px;
+  top: -10px;
+  left: 5px;
+  border-top: 5px solid rgb(67, 109, 247);
+  border-left: 5px solid rgb(67, 109, 247);
+  transform: rotate(225deg) scale(0);
+  transition: transform ease-in-out 100ms;
+}
+
+.showPassword input:checked + label .checkboxView:after {
+  transform: rotate(225deg) scale(1);
 }
 </style>
