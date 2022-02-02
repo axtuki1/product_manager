@@ -237,12 +237,12 @@ module.exports = {
             this.$router.currentRoute.fullPath != "/login"
           ) {
             // ログイン画面に飛ばす
-            this.$router.push("/login");
+            this.$router.replace("/login");
           } else if (
             this.$APPDATA.isLogin &&
             this.$router.currentRoute.fullPath == "/login"
           ) {
-            this.$router.push("/");
+            this.$router.replace("/");
           }
           clearInterval(id);
         }
