@@ -54,43 +54,50 @@ public class LogInOutApiController {
 	@Autowired
 	UserRepository repository;
 	
-	@Value("${app.recaptchaSecretKey}") 
+	@Value("${app.recaptchaSecretKey:}") 
 	private String secretKey;
+	
+	@Value("${app.recaptchaSiteKey:}") 
+	private String siteKey;
 	
 	@RequestMapping(path = "/api/v1/auth/login", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin
 	public ResponseEntity<HashMap<String, Object>> viewPage(HttpServletRequest request, ModelAndView mav, HttpSession session,@RequestBody recaptchaTokenForm token) {
-		boolean isOK = true;
+		boolean isOK = true, reCaptcha_enable = true;
 		HttpHeaders headers = new HttpHeaders();
 	    headers.add("Connection", "Keep-Alive");
 		HashMap<String, Object> out = new HashMap<>();
 		
 		// recaptcha
 		
-		HttpClient client = HttpClient.newHttpClient();
-		
-		HttpRequest req = HttpRequest.newBuilder()
-	            .uri(URI.create("https://www.google.com/recaptcha/api/siteverify"))
-	            .header("Content-Type","application/x-www-form-urlencoded")
-	            .POST(HttpRequest.BodyPublishers.ofString(
-	            		"secret="+secretKey+"&response="+token.getToken()
-	            ))
-	            .build();
+		reCaptcha_enable = !(secretKey.equals("") || siteKey.equals(""));
 		Map<String, Object> map = null;
-		try {
-            HttpResponse<String> response = client.send(req,
-                HttpResponse.BodyHandlers.ofString());
-            //System.out.println(response.body());
-            ObjectMapper mapper = new ObjectMapper();
-            map = mapper.readValue(response.body(), new TypeReference<Map<String,Object>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch(InterruptedException e) {
-            e.printStackTrace();
-        }
+		if(reCaptcha_enable) {
+			HttpClient client = HttpClient.newHttpClient();
+			
+			HttpRequest req = HttpRequest.newBuilder()
+		            .uri(URI.create("https://www.google.com/recaptcha/api/siteverify"))
+		            .header("Content-Type","application/x-www-form-urlencoded")
+		            .POST(HttpRequest.BodyPublishers.ofString(
+		            		"secret="+secretKey+"&response="+token.getToken()
+		            ))
+		            .build();
+			
+			try {
+	            HttpResponse<String> response = client.send(req,
+	                HttpResponse.BodyHandlers.ofString());
+	            //System.out.println(response.body());
+	            ObjectMapper mapper = new ObjectMapper();
+	            map = mapper.readValue(response.body(), new TypeReference<Map<String,Object>>(){});
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        } catch(InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
 		
-		if( map == null || !(boolean)map.get("success")) {
+		if( reCaptcha_enable && (map == null || !(boolean)map.get("success"))) {
 			// recaptcha
 			isOK = false;
 		} else {

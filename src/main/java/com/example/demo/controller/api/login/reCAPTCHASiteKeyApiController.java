@@ -30,7 +30,7 @@ import com.example.demo.repository.ItemRepository;
 @Controller
 public class reCAPTCHASiteKeyApiController {
 
-	@Value("${app.recaptchaSiteKey}") 
+	@Value("${app.recaptchaSiteKey:}") 
 	private String siteKey;
 
 	/**

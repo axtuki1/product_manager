@@ -78,30 +78,36 @@ module.exports = {
       .then((d) => d.json())
       .then((json) => {
         this.recaptchaSiteKey = json.key;
-        setTimeout(() => {
-          this.recaptchaId = grecaptcha.render("recaptcha", {
-            sitekey: this.recaptchaSiteKey,
-            theme: "light",
-            callback: (res) => {
-              this.recaptchaAccept = true;
-              this.isError = false;
-              this.recaptchaToken = res;
-            },
-            "expired-callback": () => {
-              this.error_handle(`recaptcha認証が期限切れです。
+        if (this.recaptchaSiteKey != "") {
+          setTimeout(() => {
+            this.recaptchaId = grecaptcha.render("recaptcha", {
+              sitekey: this.recaptchaSiteKey,
+              theme: "light",
+              callback: (res) => {
+                this.recaptchaAccept = true;
+                this.isError = false;
+                this.recaptchaToken = res;
+              },
+              "expired-callback": () => {
+                this.error_handle(`recaptcha認証が期限切れです。
                                もう一度実行してください。`);
-            },
-            "error-callback": () => {
-              this.error_handle(`recaptcha認証に失敗しました。
+              },
+              "error-callback": () => {
+                this.error_handle(`recaptcha認証に失敗しました。
                                時間を空けて再試行してください。`);
-            },
-          });
-        }, 0.5 * 1000);
+              },
+            });
+          }, 0.5 * 1000);
+        } else {
+          this.recaptchaAccept = true;
+        }
       });
   },
   methods: {
     recaptchaReset() {
+      if(this.recaptchaSiteKey == "") return;
       grecaptcha.reset(this.recaptchaId);
+      this.recaptchaAccept = false;
     },
     loggedIn() {
       this.$router.push(
