@@ -285,6 +285,7 @@ module.exports = {
     allClear() {
       this.items = [];
       this.recalc();
+      this.currentItemId = 0;
     },
     historyLastScroll() {
       const el = this.$el.querySelector(".registed-history");
