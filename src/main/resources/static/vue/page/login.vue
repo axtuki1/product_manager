@@ -101,6 +101,9 @@ module.exports = {
         } else {
           this.recaptchaAccept = true;
         }
+      }).catch(()=>{
+        this.error_handle(`サーバーとの通信に失敗しました。
+                            ネットワーク接続をお確かめください。`);
       });
   },
   methods: {
