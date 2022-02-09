@@ -12,15 +12,20 @@
         v-on:mouseup.stop.prevent="release($event)"
         v-on:mouseleave.stop.prevent="release($event)"
       >
-        <div class="close" v-on:click="this.isOpen = false">✖</div>
+        <div class="window-name">API Console</div>
+        <div class="close" v-on:click.stop.prevent="close()"
+                          v-on:mousedown.stop.prevent="(()=>{})()">✖</div>
       </div>
       <div class="content">
         <button v-on:click="$APPDATA.util_methods.logout" class="btn primary">Logout</button>
         <button v-on:click="silent_logout" class="btn primary">Logout (silent)</button>
+        <br>
+        <button v-on:click="testItemAdd" class="btn primary">Add [Testing Item] x 10</button>
         <hr>
         <div class="inputField api_endpoint">
           <label for="api_endpoint">API Endpoint</label>
-          <input type="text" id="api_endpoint" v-model="api_endpoint" />
+          <input type="text" id="api_endpoint"
+          v-model="api_endpoint" v-on:mousemove.stop="(()=>{})()"/>
         </div>
         <div class="inputField api_method">
           <label for="api_method">Request Method</label>
@@ -31,7 +36,8 @@
         </div>
         <div class="inputField api_body">
           <label for="api_body">Request Body</label>
-          <textarea id="api_body" v-model="api_body"></textarea>
+          <textarea id="api_body" v-model="api_body"
+           v-on:mousemove.stop="(()=>{})()"></textarea>
         </div>
         <button v-on:click="doReq" class="btn primary">Req invite</button>
         <hr />
@@ -110,6 +116,9 @@ module.exports = {
     release(e) {
       this.isGrabbing = false;
     },
+    close() {
+      this.isOpen = false;
+    },
     silent_logout() {
       fetch("/api/v1/logout", {
         method: "GET",
@@ -125,6 +134,23 @@ module.exports = {
           v.$APPDATA.util_methods.fatal_error_handle(
             "ログアウト処理中にエラーが発生しました",
             "通信環境を再度確認してください。"
+          );
+        });
+    },
+    testItemAdd() {
+      fetch("/api/v1/item/new/testingtasting", {
+        method: "GET",
+        headers: new Headers({
+          "content-type": "application/json",
+        }),
+      })
+        .then((res) => res.json())
+        .then((loginResult) => {
+        })
+        .catch((error) => {
+          console.log(error);
+          v.$APPDATA.util_methods.fatal_error_handle(
+            "wow..."
           );
         });
     },
@@ -191,9 +217,16 @@ textarea {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   cursor: grab;
   user-select: none;
+}
+
+.api-console .header .close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
 }
 
 .api-console.grab .header {

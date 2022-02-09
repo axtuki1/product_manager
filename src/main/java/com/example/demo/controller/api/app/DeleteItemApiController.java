@@ -43,7 +43,13 @@ public class DeleteItemApiController {
 			@PathVariable(name = "id") int id) {
 		HashMap<String, Object> data = new HashMap<>();
 		if(id < 0) return null;
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch(Exception e) {
+			data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR);
+			data.put("reason", "FOREIGN_ITEM_FOUND");
+			return data;
+		}
 		data.put("result", "ok");
 		return data;
 	}

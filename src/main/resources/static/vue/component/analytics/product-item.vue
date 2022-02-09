@@ -66,7 +66,18 @@ module.exports = {
           .then((res) => res.json())
           .then((j) => {
             this.deleting = false;
-            this.$APPDATA.util_methods.callNotice("商品を削除しました。", {
+            let text = "商品を削除しました。";
+            if (j.message == "error") {
+              switch (j.data.reason) {
+                case "FOREIGN_ITEM_FOUND":
+                  text = "販売情報に登録されている商品です。";
+                  break;
+                default:
+                  text = "削除中にエラーが発生しました。";
+                  break;
+              }
+            }
+            this.$APPDATA.util_methods.callNotice(text, {
               sec: 3,
             });
             this.$emit("reload");

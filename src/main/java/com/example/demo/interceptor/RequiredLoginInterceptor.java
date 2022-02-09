@@ -61,8 +61,16 @@ public class RequiredLoginInterceptor {
 			out.put("message", "認証に失敗しました。");
 			status = HttpStatus.UNAUTHORIZED;
 		} else if (data != null) {
+			if(data instanceof HashMap && ((HashMap<String, Object>)data).get("statusCode") != null) {
+				status = (HttpStatus) ((HashMap<String, Object>)data).get("statusCode");
+				((HashMap<String, Object>)data).remove("statusCode");
+			}
+			if(status.equals(HttpStatus.OK)) {
+				out.put("message", "ok");
+			} else {
+				out.put("message", "error");
+			}
 			out.put("data", data);
-			out.put("message", "ok");
 		} else {
 			out.put("message", "入力が不正です。");
 			status = HttpStatus.BAD_REQUEST;
