@@ -52,7 +52,7 @@ public class ItemSales {
 	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
-	public static ItemSales gen(int salesCode, int itemId, int amount, int price) {
+	public static ItemSales gen(int salesCode, Integer itemId, int amount, int price) {
 		ItemSales out = new ItemSales();
 		out.setItemId(itemId);
 		out.setPrice(price);

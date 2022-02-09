@@ -66,20 +66,22 @@ public class RegisterApiController {
 		
 		List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) form.get("items");
 		for(HashMap<String, Object> item : items) {
-			if(item.get("itemId") == null) continue; 
 			itemmove.add(ItemSales.gen(
 					id,
-					(int)item.get("itemId"),
+					item.get("itemId") == null ? null : (Integer)item.get("itemId"),
 					(int)item.get("amount"),
 					(int)item.get("price")
 			));
-			Item item_data = item_repo.getById((int)item.get("itemId"));
-			item_data.setAmount(item_data.getAmount() - (int)item.get("amount"));
-			item_repo.save(item_data);
+			if(item.get("itemId") != null) {
+				Item item_data = item_repo.getById((int)item.get("itemId"));
+				item_data.setAmount(item_data.getAmount() - (int)item.get("amount"));
+				item_repo.save(item_data);
+			}
 		}
 		item_sales_repo.saveAll(itemmove);
-		
+
 		data.put("sales_data", sales_data);
+		data.put("move_data", itemmove);
 		
 		return data;
 	}

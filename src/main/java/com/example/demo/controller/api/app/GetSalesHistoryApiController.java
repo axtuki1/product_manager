@@ -55,7 +55,7 @@ public class GetSalesHistoryApiController {
 		data.put(
 					"move", 
 					jdbc.queryForList(
-							"SELECT A.item_id, item_name, A.item_price, A.item_amount FROM `item_sales` A INNER JOIN `items` B ON A.item_id = B.item_id WHERE A.sales_code = ?", 
+							"SELECT A.item_id, item_name, A.item_price, A.item_amount FROM `item_sales` A LEFT OUTER JOIN `items` B ON A.item_id = B.item_id WHERE A.sales_code = ?", 
 							id
 					)
 				);

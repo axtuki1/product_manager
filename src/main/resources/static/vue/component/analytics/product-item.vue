@@ -4,7 +4,7 @@
     v-on:click="push"
     v-bind:class="{ deleting: deleting }"
   >
-    <div class="name">{{ item.item_name }}</div>
+    <div class="name">{{ item.item_name != null ? item.item_name:"商品" }}</div>
     <div class="infomation">
       <div class="price">
         <span class="key">購入時価格:</span>
@@ -44,6 +44,12 @@ module.exports = {
   mounted() {},
   methods: {
     push() {
+      if(this.item.item_id == null) {
+        this.$APPDATA.util_methods.callNotice(
+          "会計時に登録されていない商品です。"
+          );
+        return;
+      }
       this.$router.push("/product/" + this.item.item_id);
     },
     editPush() {
