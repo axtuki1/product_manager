@@ -27,6 +27,7 @@ public class RequiredLoginInterceptor {
 	/**
 	 * api.appパッケージ内で動くControllerに対して割り込むInterceptor。
 	 * HTTP Statusをしっかり返したいけどなんか返してくれないから200 OK固定。つらい。
+	 * 2022/02/10 勝った！！！！ ちゃんとStatusCode返すいい子になったよ！！！！！
 	 */
 	@Around("execution(* com.example.demo.controller.api.app.*.*(..)) && @annotation(requestMapping)")
 	public Object around(
