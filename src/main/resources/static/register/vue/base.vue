@@ -241,6 +241,10 @@ module.exports = {
         .replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ","));
     },
     sendRegisterData() {
+      if(this.payment_amount - this.total < 0){
+        this.$APPDATA.util_methods.callNotice("金額が足りません。");
+        return;
+      }
       this.loading = true;
       fetch("/api/v1/register", {
         method: "POST",
