@@ -74,6 +74,9 @@ module.exports = {
     };
   },
   mounted() {
+    if(this.$APPDATA.isLogin) this.loggedIn();
+    this.browserBackControl();
+    window.addEventListener('popstate', this.browserBackControl);
     fetch("/api/v1/recaptchaKey")
       .then((d) => d.json())
       .then((json) => {
@@ -107,6 +110,9 @@ module.exports = {
       });
   },
   methods: {
+    browserBackControl(){
+      history.pushState(null, '', null);
+    },
     recaptchaReset() {
       if(this.recaptchaSiteKey == "") return;
       grecaptcha.reset(this.recaptchaId);
@@ -118,6 +124,7 @@ module.exports = {
           ? "/"
           : this.$APPDATA.loginBeforeViewPage
       );
+      window.removeEventListener("popstate", this.browserBackControl);
     },
     passEnter(e) {
       if (e.key == "Enter") {
