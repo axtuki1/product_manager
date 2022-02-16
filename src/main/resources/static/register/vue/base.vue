@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="right">
-      <div class="catalog" v-if="!isDetails">[ワンタッチ登録部分]</div>
+      <div class="catalog" v-if="!isDetails">待機中...</div>
       <div v-if="isDetails" class="details">
         <div class="billing-total-amount">
           <div class="label">{{ $t("total.label") }}</div>
